@@ -1,0 +1,8 @@
+flowchart LR
+ U["Navegador: View\nHTML / CSS / JavaScript"] -->|"HTTP / JSON + cookie"| C["Controller\nAppController.api"]
+ C --> M["Model: Services\nMeritService / EmailService"]
+ C --> R["Repository DAO"]
+ M --> R
+ R --> DB[("SQLite local / D1 hospedado")]
+ M -->|"HTTPS, quando configurado"| E["Resend"]
+ A["server.mjs / worker/app.ts\nAdaptadores HTTP"] --> C

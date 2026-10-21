@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+actor Aluno
+actor Professor
+actor "Empresa parceira" as Empresa
+actor "Serviço de e-mail" as Email
+rectangle Meritus {
+ usecase "Autenticar / sair" as UC1
+ usecase "Cadastrar, consultar, editar\ne desativar cadastro" as UC2
+ usecase "Consultar saldo e extrato" as UC3
+ usecase "Reconhecer aluno\ncom moedas e motivo" as UC4
+ usecase "Aplicar crédito semestral" as UC5
+ usecase "Consultar / resgatar vantagem" as UC6
+ usecase "Gerenciar vantagens\ncom descrição, foto e custo" as UC7
+ usecase "Consultar / conferir cupom" as UC8
+ usecase "Registrar e enviar notificação" as UC9
+}
+Aluno --> UC1
+Professor --> UC1
+Empresa --> UC1
+Aluno --> UC2
+Empresa --> UC2
+Aluno --> UC3
+Professor --> UC3
+Professor --> UC4
+Professor --> UC5
+Aluno --> UC6
+Empresa --> UC7
+Aluno --> UC8
+Empresa --> UC8
+UC4 ..> UC9 : <<include>>
+UC6 ..> UC9 : <<include>>
+UC6 ..> UC8 : gera
+Email --> UC9
+note bottom of UC9 : Envio externo exige credenciais;\noutbox registra sem o provedor.
+@enduml
