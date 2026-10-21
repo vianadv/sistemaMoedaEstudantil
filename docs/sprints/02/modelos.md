@@ -105,6 +105,7 @@ erDiagram
  institutions {
  TEXT id PK "Identificador"
  TEXT name "Nome"
+
  }
  users {
  TEXT id PK
@@ -121,11 +122,13 @@ erDiagram
  INTEGER balance
  INTEGER active
  TEXT created_at
+
  }
  sessions {
  TEXT token_hash PK
  TEXT user_id FK
  INTEGER expires_at
+
  }
  offers {
  TEXT id PK
@@ -135,6 +138,7 @@ erDiagram
  TEXT photo
  INTEGER cost
  INTEGER active
+
  }
  coupons {
  TEXT id PK
@@ -148,6 +152,7 @@ erDiagram
  TEXT request_key UK
  TEXT created_at
  TEXT used_at
+
  }
  transactions {
  TEXT id PK
@@ -160,6 +165,7 @@ erDiagram
  TEXT semester
  TEXT request_key UK
  TEXT created_at
+
  }
  emails {
  TEXT id PK
@@ -171,6 +177,7 @@ erDiagram
  TEXT status
  TEXT error
  TEXT created_at
+
  }
 ```
 

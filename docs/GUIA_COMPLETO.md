@@ -71,9 +71,9 @@ Não retroaja datas e não apresente os modelos propostos como histórico real d
 
 Consulte `docs/DEPLOY.md` para o resultado confirmado da publicação. GitHub hospeda o código; ele não executa automaticamente esse backend. **GitHub Pages não atende esta aplicação completa**, pois não executa a API e o banco do servidor.
 
-O deploy Sites utiliza Worker e D1. A base hospedada é independente da local. O site pode estar restrito à conta proprietária; nesse caso, apresente conectado e ajuste o compartilhamento pelo painel antes de enviar ao professor, ou use outra hospedagem com backend. Não afirme que um link privado está aberto para a turma.
+O site público está em https://meritus-estudantil.vianadv.workers.dev. Ele usa Cloudflare Workers Free e D1 Free, na conta autorizada do proprietário. O professor não precisa entrar em uma conta Cloudflare; usa apenas o login do próprio aplicativo. A base hospedada é independente da local. Não é necessário manter o computador ligado.
 
-### Alternativa reproduzível: Cloudflare Workers + D1
+### Publicação reproduzível: Cloudflare Workers Free + D1 Free
 
 1. Instale as ferramentas com `npm ci` e gere o pacote com `npm run build`.
 2. Entre na sua conta Cloudflare pelo Wrangler: `npx wrangler login`.
@@ -83,7 +83,7 @@ O deploy Sites utiliza Worker e D1. A base hospedada é independente da local. O
 6. Publique com `npx wrangler deploy --config wrangler.jsonc` depois de copiar e preencher o exemplo. A URL aparecerá no terminal.
 7. Confira `/api/health`, faça login e execute professor → aluno → empresa. O seed fictício é inserido no primeiro acesso.
 
-Essa alternativa exige sua conta Cloudflare; não altera a publicação já gerenciada pelo Sites. Não confirme contratação paga sem revisar as condições. Use a publicação entregue se ela já atender seu acesso.
+A publicação já foi configurada na conta Cloudflare autorizada, sem contratar um plano pago. Para atualizá-la, use `npx wrangler deploy --config wrangler.cloudflare.jsonc` após gerar o build. Não crie outro banco nem reaplique o esquema na base existente. As etapas acima servem para uma nova conta/base. O arquivo docs/CLOUDFLARE.md detalha o procedimento.
 
 ## 5. Como apresentar em formato de pitch
 

@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "meritus-estudantil",
+  "account_id": "ed3e63b22343a9fc5d08ddd3bd11bc25",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "no_bundle": true,
+  "rules": [{"type": "ESModule", "globs": ["**/*.js", "**/*.mjs"]}],
+  "assets": {"directory": "dist/client"},
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "meritus-db",
+    "database_id": "6446e008-373b-42bf-a03a-4fada014194d"
+  }]
+}

@@ -4,6 +4,10 @@ Reconhecimento de professores que se transforma em vantagens no campus. Projeto 
 
 **Repositório:** https://github.com/vianadv/sistemaMoedaEstudantil
 
+**Site público:** https://meritus-estudantil.vianadv.workers.dev
+
+Hospedagem Cloudflare Workers Free, com banco D1 Free. O professor pode abrir o endereço em outro computador e usar as contas de demonstração abaixo.
+
 ## Comece aqui
 
 1. Instale o **Node.js 24 LTS** em https://nodejs.org/ e abra um terminal nesta pasta.
@@ -89,5 +93,6 @@ apresentacao/              Slides e roteiro de fala
 - [Tutorial das tecnologias](docs/TUTORIAL.md)
 - [Roteiro de 20 minutos](apresentacao/ROTEIRO.md)
 - [Situação do deploy](docs/DEPLOY.md)
+- [Publicação e atualizações na Cloudflare Free](docs/CLOUDFLARE.md)
 
 As pastas de sprints registram **versões propostas reconstruídas nesta entrega**, não alegam execução ou apresentação em datas anteriores. Elas não substituem a participação semanal prevista no enunciado. Não há garantia de nota: a avaliação depende da execução, defesa, critérios do professor e histórico do grupo.

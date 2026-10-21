@@ -1,11 +1,17 @@
-# Deploy confirmado
+# Publicação na Cloudflare Free
 
-URL: https://meritus-lab-estudantil-2026.walm-gpt.chatgpt.site
+URL pública: https://meritus-estudantil.vianadv.workers.dev
 
-Publicação confirmada em 21/10/2026, 09:43 (America/Sao_Paulo). Acesso público autorizado pelo usuário. Banco Cloudflare D1 persistente. Contas fictícias de demonstração disponíveis na tela inicial.
+Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
-O domínio contém chatgpt.site, que identifica a plataforma de hospedagem. O endereço não mostra o diretório local do computador. Para usar um domínio independente, o guia descreve a publicação na própria conta Cloudflare com workers.dev; essa segunda publicação exige a autenticação do proprietário e ainda não foi executada.
+A Cloudflare confirmou o deploy em 21/10/2026. Versão: b54a31e1-3bde-4d23-85fd-0ba80457530d. O endereço workers.dev é independente da primeira hospedagem. O computador local pode estar desligado; o aplicativo e o banco executam na Cloudflare.
 
-Código publicado: 6b1067cbeac31149816f4880dae49e9a19a44154. A documentação e apresentação podem receber atualização posterior sem alterar o comportamento da aplicação. A base local e a hospedada são independentes.
+A publicação usa a mesma lógica de negócio escolhida pelo usuário. O ajuste de recomposição de semestres sem acesso não foi publicado, conforme sua decisão.
 
-Envio externo de e-mails não configurado: caixa de saída funciona e integração Resend está implementada. Preencha RESEND_API_KEY e EMAIL_FROM e teste com destinatários reais antes de declarar que o envio foi validado.
+Esta base é independente da primeira demonstração e da execução local. Ela começa com contas e vantagens fictícias; os saldos persistem após a utilização. O professor é creditado com 1.000 moedas no primeiro acesso do semestre. O aluno começa sem moedas.
+
+Contas: professor@meritus.demo, aluno@meritus.demo e empresa@meritus.demo. Senha de todas: Meritus@123. Também há botões na tela inicial que preenchem e realizam esses logins.
+
+E-mails externos continuam dependendo de RESEND_API_KEY, EMAIL_FROM e destinatários reais. Sem essa configuração, a caixa de saída é demonstrativa e as mensagens não chegam a caixas externas.
+
+Para atualizar: npm ci; npm run build; npx wrangler login; npx wrangler deploy --config wrangler.cloudflare.jsonc. Não reaplique o SQL inicial ao banco já configurado. Consulte CLOUDFLARE.md para manutenção e limites gratuitos.

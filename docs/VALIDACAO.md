@@ -21,3 +21,11 @@ Em 21/10/2026, às 09:49 (São Paulo), foi conferido pela interface publicada:
 - Nova tentativa recusada com a mensagem "Este cupom já foi utilizado".
 
 O teste usa somente dados e moedas fictícios. Não houve compra real nem envio externo de e-mail. O site ficou com esses registros de demonstração; o próximo ensaio começa a partir do saldo atual. O fluxo publicado foi verificado, além da suíte local de 13 testes aprovada novamente.
+
+## Publicação independente na Cloudflare Free
+
+Em 21/10/2026, a mesma versão foi publicada em https://meritus-estudantil.vianadv.workers.dev, com D1 na conta Cloudflare autorizada. Foram verificados HTTPS válido e resposta HTTP 200 de `/api/health`, com `database: true`. A tela inicial abriu sem exigir login na Cloudflare. O login do professor, o extrato, o login do aluno e o catálogo foram conferidos pela interface pública.
+
+O extrato já continha um reconhecimento de 100 moedas registrado durante o uso das contas fictícias: professor com 900 e aluno com 100 no momento da conferência. Esses saldos são dados persistentes de demonstração e podem mudar com o uso. A captura `preview-cloudflare.png` documenta a interface desta hospedagem. As evidências anteriores de resgate e uso único referem-se à primeira hospedagem; não se deve apresentá-las como um segundo teste completo desta base nova.
+
+A suíte local foi executada novamente, com 13 testes aprovados. O envio externo de e-mail permanece não configurado. O ajuste de recomposição de semestres sem acesso não foi incluído, conforme decisão do usuário. Não foi contratado plano pago.
