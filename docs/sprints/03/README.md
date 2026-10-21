@@ -4,6 +4,6 @@ Entregas finais: CRUDs de aluno/empresa, três perfis, reconhecimento, crédito 
 
 Atualizações do modelo: sessão com token hash, notificações com status, perfil ativo, cupom com snapshot do benefício, chave idempotente e unicidade do semestre. Esses elementos estão no código e no esquema.
 
-A apresentação deve durar 20 minutos e inclui tutorial das tecnologias, como pede o enunciado. Arquivos em `apresentacao/`. A integração de e-mail está pronta, mas o envio externo precisa de chave e remetente; não confundir caixa de saída com entrega real.
+A apresentação curta reúne 8 slides para uma fala estimada de 7 a 8 minutos, conforme o tempo informado para esta entrega. Inclui exemplo de uso e tutorial compacto das tecnologias. Arquivo em `apresentacao/`. A integração de e-mail está pronta, mas o envio externo precisa de chave e remetente; não confundir caixa de saída com entrega real.
 
 Planejamento sugerido dos 100 minutos: 40 finalizar fluxos, 20 testes/modelos, 20 deploy e tutorial, 20 ensaio/apresentação. São estimativas, não tempos observados.

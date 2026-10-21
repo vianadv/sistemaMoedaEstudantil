@@ -1,4 +1,6 @@
-# Tutorial das tecnologias: 5 minutos dentro da apresentação
+# Tutorial complementar das tecnologias
+
+A apresentação contém uma versão compacta deste tutorial. Este documento detalha os comandos e o fluxo para consulta.
 
 ## 1. Por que estas tecnologias?
 

@@ -24,7 +24,7 @@ Base: enunciado LABDESENV_3 (1).pdf, páginas 1–2.
 | DOC02 | ER e CRUDs iniciais | `docs/sprints/02` |
 | DOC03 | Arquitetura, persistência e tutorial | `docs/ARQUITETURA.md`, `docs/TUTORIAL.md` e apresentação |
 | DOC04 | Versões dos modelos no GitHub | Pastas 01/02/03 com status e evolução |
-| AP01 | Apresentação de 20 minutos | 13 slides com notas do apresentador |
+| AP01 | Apresentação curta, com menos de 10 minutos | 8 slides com texto de apoio à fala e tutorial compacto |
 
 ## Critérios verificáveis
 

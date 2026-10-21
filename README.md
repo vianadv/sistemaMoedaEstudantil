@@ -84,6 +84,7 @@ apresentacao/              Slides da apresentação
 
 ## Entrega acadêmica
 
+- [Pitch curto: 8 slides, fala estimada de 7 a 8 minutos](apresentacao/Meritus_Pitch.pptx)
 - [Execução local, build e configuração de e-mail](docs/EXECUCAO.md)
 - [Matriz de requisitos e evidências](docs/REQUISITOS.md)
 - [Arquitetura e persistência](docs/ARQUITETURA.md)
