@@ -84,123 +84,94 @@ flowchart LR
 ## Modelo ER
 
 ```mermaid
-
 erDiagram
- institutions ||--o{ users : vincula
- users ||--o{ sessions : autentica
- users ||--o{ offers : empresa_oferece
- users ||--o{ coupons : aluno_ou_empresa
- offers ||--o{ coupons : origina
- users |o--o{ transactions : origem_ou_destino
+ institutions ||--o{
+ users : vincula
+ users ||--o{
+ sessions : autentica
+ users ||--o{
+ offers : empresa_oferece
+ users ||--o{
+ coupons : aluno_ou_empresa
+ offers ||--o{
+ coupons : origina
+ users |o--o{
+ transactions : origem_ou_destino
  coupons |o--|| transactions : resgate
- transactions ||--o{ emails : gera
- users ||--o{ emails : destinatario
- institutions { TEXT id PK "Identificador"
-
- TEXT name "Nome" }
- users { TEXT id PK
-
+ transactions ||--o{
+ emails : gera
+ users ||--o{
+ emails : destinatario
+ institutions {
+ TEXT id PK "Identificador"
+ TEXT name "Nome"
+ }
+ users {
+ TEXT id PK
  TEXT role "student teacher partner"
-
  TEXT name
-
  TEXT email UK
-
  TEXT password_hash
-
  TEXT cpf UK
-
  TEXT rg
-
  TEXT address
-
  TEXT institution_id FK
-
  TEXT course
-
  TEXT department
-
  INTEGER balance
-
  INTEGER active
-
- TEXT created_at }
- sessions { TEXT token_hash PK
-
- TEXT user_id FK
-
- INTEGER expires_at }
- offers { TEXT id PK
-
- TEXT partner_id FK
-
- TEXT title
-
- TEXT description
-
- TEXT photo
-
- INTEGER cost
-
- INTEGER active }
- coupons { TEXT id PK
-
- TEXT code UK
-
- TEXT student_id FK
-
- TEXT partner_id FK
-
- TEXT offer_id FK
-
- TEXT title
-
- INTEGER cost
-
- TEXT status
-
- TEXT request_key UK
-
  TEXT created_at
-
- TEXT used_at }
- transactions { TEXT id PK
-
- TEXT kind
-
- TEXT from_id FK
-
- TEXT to_id FK
-
- INTEGER amount
-
- TEXT reason
-
- TEXT coupon_id FK,UK
-
- TEXT semester
-
- TEXT request_key UK
-
- TEXT created_at }
- emails { TEXT id PK
-
+ }
+ sessions {
+ TEXT token_hash PK
  TEXT user_id FK
-
- TEXT recipient
-
- TEXT subject
-
- TEXT body
-
- TEXT transaction_id FK
-
+ INTEGER expires_at
+ }
+ offers {
+ TEXT id PK
+ TEXT partner_id FK
+ TEXT title
+ TEXT description
+ TEXT photo
+ INTEGER cost
+ INTEGER active
+ }
+ coupons {
+ TEXT id PK
+ TEXT code UK
+ TEXT student_id FK
+ TEXT partner_id FK
+ TEXT offer_id FK
+ TEXT title
+ INTEGER cost
  TEXT status
-
+ TEXT request_key UK
+ TEXT created_at
+ TEXT used_at
+ }
+ transactions {
+ TEXT id PK
+ TEXT kind
+ TEXT from_id FK
+ TEXT to_id FK
+ INTEGER amount
+ TEXT reason
+ TEXT coupon_id FK,UK
+ TEXT semester
+ TEXT request_key UK
+ TEXT created_at
+ }
+ emails {
+ TEXT id PK
+ TEXT user_id FK
+ TEXT recipient
+ TEXT subject
+ TEXT body
+ TEXT transaction_id FK
+ TEXT status
  TEXT error
-
- TEXT created_at }
-
+ TEXT created_at
+ }
 ```
 
 A tabela users representa aluno, professor e empresa; instituição é opcional apenas para empresa. SQL e DAO em db/ e src/models.
