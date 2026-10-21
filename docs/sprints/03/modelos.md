@@ -95,13 +95,111 @@ erDiagram
  coupons |o--|| transactions : resgate
  transactions ||--o{ emails : gera
  users ||--o{ emails : destinatario
- institutions { TEXT id PK "Identificador" TEXT name "Nome" }
- users { TEXT id PK TEXT role "student teacher partner" TEXT name TEXT email UK TEXT password_hash TEXT cpf UK TEXT rg TEXT address TEXT institution_id FK TEXT course TEXT department INTEGER balance INTEGER active TEXT created_at }
- sessions { TEXT token_hash PK TEXT user_id FK INTEGER expires_at }
- offers { TEXT id PK TEXT partner_id FK TEXT title TEXT description TEXT photo INTEGER cost INTEGER active }
- coupons { TEXT id PK TEXT code UK TEXT student_id FK TEXT partner_id FK TEXT offer_id FK TEXT title INTEGER cost TEXT status TEXT request_key UK TEXT created_at TEXT used_at }
- transactions { TEXT id PK TEXT kind TEXT from_id FK TEXT to_id FK INTEGER amount TEXT reason TEXT coupon_id FK,UK TEXT semester TEXT request_key UK TEXT created_at }
- emails { TEXT id PK TEXT user_id FK TEXT recipient TEXT subject TEXT body TEXT transaction_id FK TEXT status TEXT error TEXT created_at }
+ institutions { TEXT id PK "Identificador"
+
+ TEXT name "Nome" }
+ users { TEXT id PK
+
+ TEXT role "student teacher partner"
+
+ TEXT name
+
+ TEXT email UK
+
+ TEXT password_hash
+
+ TEXT cpf UK
+
+ TEXT rg
+
+ TEXT address
+
+ TEXT institution_id FK
+
+ TEXT course
+
+ TEXT department
+
+ INTEGER balance
+
+ INTEGER active
+
+ TEXT created_at }
+ sessions { TEXT token_hash PK
+
+ TEXT user_id FK
+
+ INTEGER expires_at }
+ offers { TEXT id PK
+
+ TEXT partner_id FK
+
+ TEXT title
+
+ TEXT description
+
+ TEXT photo
+
+ INTEGER cost
+
+ INTEGER active }
+ coupons { TEXT id PK
+
+ TEXT code UK
+
+ TEXT student_id FK
+
+ TEXT partner_id FK
+
+ TEXT offer_id FK
+
+ TEXT title
+
+ INTEGER cost
+
+ TEXT status
+
+ TEXT request_key UK
+
+ TEXT created_at
+
+ TEXT used_at }
+ transactions { TEXT id PK
+
+ TEXT kind
+
+ TEXT from_id FK
+
+ TEXT to_id FK
+
+ INTEGER amount
+
+ TEXT reason
+
+ TEXT coupon_id FK,UK
+
+ TEXT semester
+
+ TEXT request_key UK
+
+ TEXT created_at }
+ emails { TEXT id PK
+
+ TEXT user_id FK
+
+ TEXT recipient
+
+ TEXT subject
+
+ TEXT body
+
+ TEXT transaction_id FK
+
+ TEXT status
+
+ TEXT error
+
+ TEXT created_at }
 
 ```
 
