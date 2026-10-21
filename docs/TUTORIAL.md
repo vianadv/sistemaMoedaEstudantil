@@ -4,7 +4,7 @@
 
 HTML estrutura a tela; CSS define aparência e adaptação ao celular; JavaScript controla interações. No backend, o mesmo JavaScript executa regras no servidor. SQLite mantém tabelas e relacionamentos sem instalar um servidor de banco. O DAO concentra acesso aos dados. A hospedagem usa Worker/D1, preservando o mesmo contrato SQL.
 
-Não apresente Vinext como requisito da versão local: ele integra o pacote de hospedagem. O navegador nunca abre diretamente o banco.
+A execução local usa somente módulos nativos do Node.js. O esbuild é usado apenas para preparar o Worker da hospedagem. O navegador nunca abre diretamente o banco.
 
 ## 2. Execute na frente da turma
 

@@ -12,7 +12,7 @@ Um monólito web, com uma interface e uma API no mesmo domínio. Não há micros
 | Controller | função `api()` em `src/controllers/AppController.mjs` | Interpretar HTTP, autenticar, autorizar, validar entrada e devolver JSON |
 | Model / domínio | `MeritService`, `EmailService` e registros do banco | Aplicar reconhecimento, resgate, semestre e notificação |
 | Model / persistência | `Repository` | Encapsular `one`, `all`, `run` e `batch`, com parâmetros SQL |
-| Adaptadores | `server.mjs`, `worker/app.ts` | Traduzir ambiente Node/SQLite ou Worker/D1 para o mesmo controlador |
+| Adaptadores | `server.mjs`, `worker/app.mjs` | Traduzir ambiente Node/SQLite ou Worker/D1 para o mesmo controlador |
 
 O Model não precisa ser um ORM. Escolhemos o padrão **DAO**, opção expressamente aceita no enunciado. Drizzle descreve o esquema e gera migrações; o acesso de negócio é pelo DAO, não pelo ORM em tempo de execução. As entidades são registros relacionais. O modelo conceitual usa Aluno, Professor e Empresa; na implementação eles compartilham `users`, diferenciados por `role`. Não existem classes `Aluno` ou `Professor` artificiais que o código não utilize.
 
@@ -49,7 +49,7 @@ A mensagem nasce na mesma transação das moedas. Envio é posterior e não desf
 ## Ambientes
 
 - Local: Node.js 24, HTTP nativo e `node:sqlite`, arquivo persistente.
-- Hospedado: Cloudflare Worker, D1 e adaptador de build Vinext/Vite do Sites.
+- Hospedado: Cloudflare Worker ESM e D1; o esbuild reúne código e arquivos da interface em um único módulo.
 - As duas implementações expõem ao Repository o mesmo contrato de consultas e lotes.
 - A base local e a base hospedada são independentes. O teste em memória também é separado.
 

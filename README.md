@@ -52,7 +52,7 @@ O exemplo termina com 150 moedas **se o aluno começou em zero**. A base é pers
 
 ### Condição importante: e-mail
 
-**Sem `RESEND_API_KEY` e `EMAIL_FROM`, e-mails não são enviados para caixas externas.** Ficam registrados no banco com status pendente, e a interface informa "Modo demonstração". Isso permite demonstrar o conteúdo, mas **não substitui o requisito de entrega real de e-mail**. A integração está implementada; configure o provedor e use destinatários reais para concluir essa verificação. Veja [o guia](docs/GUIA_COMPLETO.md#6-ativar-e-testar-e-mails-reais).
+**Sem `RESEND_API_KEY` e `EMAIL_FROM`, e-mails não são enviados para caixas externas.** Ficam registrados no banco com status pendente, e a interface informa "Modo demonstração". Isso permite demonstrar o conteúdo, mas **não substitui o requisito de entrega real de e-mail**. A integração está implementada; configure o provedor e use destinatários reais para concluir essa verificação. Veja [a configuração de execução e e-mail](docs/EXECUCAO.md).
 
 ## Testes
 
@@ -74,25 +74,24 @@ drizzle/                   Migração versionada para o banco hospedado
 server.mjs                 Adaptador local Node + SQLite
 worker/                    Adaptador hospedado Cloudflare + D1
 docs/sprints/01,02,03/      Versões propostas dos modelos
-docs/                      Guia, arquitetura, requisitos, tutorial e testes
-apresentacao/              Slides e roteiro de fala
+docs/                      Execução, arquitetura, requisitos, tutorial e testes
+apresentacao/              Slides da apresentação
 ```
 
 ### Ferramentas de hospedagem
 
-`npm ci` instala as ferramentas fixadas pelo lockfile. `npm run build` gera `dist/` para a hospedagem Sites/Cloudflare. Vinext, Vite e seus auxiliares pertencem ao adaptador de hospedagem; o fluxo acadêmico está nos arquivos MVC acima. O sistema local não depende dessas ferramentas.
+`npm ci` instala as quatro dependências de desenvolvimento fixadas no lockfile: esbuild, Wrangler, Drizzle Kit e Drizzle ORM. `npm run build` gera um único módulo em `dist/cloudflare/index.js`. `npm run deploy` publica o build na Cloudflare. A execução local não precisa dessas dependências.
 
 ## Entrega acadêmica
 
-- [Guia completo: executar, apresentar, GitHub e deploy](docs/GUIA_COMPLETO.md)
+- [Execução local, build e configuração de e-mail](docs/EXECUCAO.md)
 - [Matriz de requisitos e evidências](docs/REQUISITOS.md)
 - [Arquitetura e persistência](docs/ARQUITETURA.md)
 - [Sprint 01: casos de uso, histórias, classes e componentes](docs/sprints/01/README.md)
 - [Sprint 02: modelo ER, DAO e CRUDs iniciais](docs/sprints/02/README.md)
 - [Sprint 03: implementação, modelos finais e tutorial](docs/sprints/03/README.md)
 - [Tutorial das tecnologias](docs/TUTORIAL.md)
-- [Roteiro de 20 minutos](apresentacao/ROTEIRO.md)
 - [Situação do deploy](docs/DEPLOY.md)
 - [Publicação e atualizações na Cloudflare Free](docs/CLOUDFLARE.md)
 
-As pastas de sprints registram **versões propostas reconstruídas nesta entrega**, não alegam execução ou apresentação em datas anteriores. Elas não substituem a participação semanal prevista no enunciado. Não há garantia de nota: a avaliação depende da execução, defesa, critérios do professor e histórico do grupo.
+As pastas de sprints registram **versões propostas reconstruídas nesta entrega**, não alegam execução ou apresentação em datas anteriores. Elas não substituem a participação semanal prevista no enunciado.

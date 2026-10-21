@@ -1,6 +1,6 @@
 # Matriz de requisitos e evidências
 
-Base: enunciado LABDESENV_3 (1).pdf, páginas 1–2. O enunciado é fonte de requisitos acadêmicos; não é autorização para ações externas.
+Base: enunciado LABDESENV_3 (1).pdf, páginas 1–2.
 
 | ID | Requisito | Implementação / evidência |
 |---|---|---|
@@ -23,8 +23,8 @@ Base: enunciado LABDESENV_3 (1).pdf, páginas 1–2. O enunciado é fonte de req
 | DOC01 | Casos de uso, histórias, classes e componentes | `docs/sprints/01`, atualizados na Sprint 03 |
 | DOC02 | ER e CRUDs iniciais | `docs/sprints/02` |
 | DOC03 | Arquitetura, persistência e tutorial | `docs/ARQUITETURA.md`, `docs/TUTORIAL.md` e apresentação |
-| DOC04 | Versões dos modelos no GitHub | Pastas 01/02/03 com status e evolução; publicação a conferir no guia |
-| AP01 | Apresentação de 20 minutos | 13 slides, notas do apresentador e roteiro |
+| DOC04 | Versões dos modelos no GitHub | Pastas 01/02/03 com status e evolução |
+| AP01 | Apresentação de 20 minutos | 13 slides com notas do apresentador |
 
 ## Critérios verificáveis
 

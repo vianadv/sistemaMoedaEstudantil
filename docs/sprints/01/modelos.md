@@ -77,6 +77,6 @@ flowchart LR
  M --> R
  R --> DB[("SQLite local / D1 hospedado")]
  M -->|"HTTPS, quando configurado"| E["Resend"]
- A["server.mjs / worker/app.ts\nAdaptadores HTTP"] --> C
+ A["server.mjs / worker/app.mjs\nAdaptadores HTTP"] --> C
 
 ```

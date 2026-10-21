@@ -5,8 +5,8 @@ O projeto pode ser publicado diretamente na conta Cloudflare do proprietário, c
 ## Configuração do projeto
 
 - `wrangler.cloudflare.jsonc`: aplicativo `meritus-estudantil`, banco `meritus-db` e binding `DB`.
-- `dist/server/index.js`: backend compilado; `dist/client`: arquivos estáticos.
-- `src/`: mesmo código de negócio da versão acadêmica mantida pelo usuário.
+- `dist/cloudflare/index.js`: módulo compilado com backend e arquivos estáticos incorporados.
+- `src/`: interface, controlador, serviços e DAO da aplicação.
 - OAuth e arquivos de autenticação são locais, ignorados pelo Git e excluídos do ZIP. Os IDs públicos da conta e do banco não são credenciais.
 
 ## Conta e plano

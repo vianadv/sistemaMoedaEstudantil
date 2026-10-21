@@ -1,11 +1,28 @@
 {
-  // Copie para wrangler.jsonc e substitua o ID pelo D1 da SUA conta.
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "meritus-estudantil",
-  "main": "dist/server/index.js",
+  "main": "dist/cloudflare/index.js",
   "compatibility_date": "2026-05-15",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
   "no_bundle": true,
-  "rules": [{"type":"ESModule","globs":["**/*.js","**/*.mjs"]}],
-  "assets": {"directory":"dist/client"},
-  "d1_databases": [{"binding":"DB","database_name":"meritus-db","database_id":"SUBSTITUA-PELO-ID-RETORNADO"}]
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": [
+        "**/*.js",
+        "**/*.mjs"
+      ]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "meritus-db",
+      "database_id": "SUBSTITUA-PELO-ID-DO-SEU-D1"
+    }
+  ]
 }
