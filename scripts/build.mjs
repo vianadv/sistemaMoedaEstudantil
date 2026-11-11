@@ -15,6 +15,7 @@ await build({
   format: 'esm',
   platform: 'browser',
   target: 'es2022',
+  external: ['node:tls'],
   logLevel: 'info',
   plugins: [{
     name: 'text-assets',

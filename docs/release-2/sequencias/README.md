@@ -28,7 +28,7 @@ sequenceDiagram
   participant DAO as Repository
   participant DB as SQLite ou D1
   participant Mail as EmailService
-  participant Resend
+  participant Delivery as Gmail SMTP ou Resend
   Professor->>View: Selecionar aluno, quantidade e motivo
   View->>Controller: POST /api/recognitions + chave + cookie
   Controller->>Controller: Autenticar e exigir perfil teacher
@@ -60,8 +60,8 @@ sequenceDiagram
         loop Para cada mensagem ainda não enviada
           Mail->>DAO: one(e-mail por id)
           DAO-->>Mail: Destinatário, assunto e corpo
-          Mail->>Resend: POST /emails com Idempotency-Key
-          Resend-->>Mail: Aceite ou falha
+          Mail->>Delivery: Enviar pelo provedor configurado
+          Delivery-->>Mail: Aceite ou falha
           Mail->>DAO: run(status sent ou failed)
         end
       else Sem chave ou remetente
@@ -219,7 +219,7 @@ sequenceDiagram
   participant DAO as Repository
   participant DB as SQLite ou D1
   participant Mail as EmailService
-  participant Resend
+  participant Delivery as Gmail SMTP ou Resend
   Aluno->>View: Selecionar vantagem e confirmar custo
   View->>Controller: POST /api/redemptions com offerId, chave e cookie
   Controller->>Controller: Autenticar e exigir perfil student
@@ -254,8 +254,8 @@ sequenceDiagram
           loop Para cada mensagem
             Mail->>DAO: Carregar e-mail
             DAO-->>Mail: Dados da mensagem
-            Mail->>Resend: Enviar template com o mesmo código
-            Resend-->>Mail: Aceite ou falha
+            Mail->>Delivery: Enviar template com o mesmo código
+            Delivery-->>Mail: Aceite ou falha
             Mail->>DAO: Atualizar sent ou failed
           end
         else Sem configuração
@@ -285,7 +285,7 @@ sequenceDiagram
   participant Service as MeritService
   participant Templates as emailTemplates
   participant DAO as Repository / Banco
-  participant Mail as EmailService / Resend
+  participant Mail as EmailService / Gmail ou Resend
   Note over View,DAO: Cada perfil usa sua própria sessão. Todas as rotas de negócio exigem autenticação
   Professor->>View: Entrar com e-mail e senha
   View->>Controller: POST /api/login

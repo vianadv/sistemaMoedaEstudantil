@@ -7,7 +7,7 @@ sequenceDiagram
   participant DAO as Repository
   participant DB as SQLite ou D1
   participant Mail as EmailService
-  participant Resend
+  participant Delivery as Gmail SMTP ou Resend
   Aluno->>View: Selecionar vantagem e confirmar custo
   View->>Controller: POST /api/redemptions com offerId, chave e cookie
   Controller->>Controller: Autenticar e exigir perfil student
@@ -42,8 +42,8 @@ sequenceDiagram
           loop Para cada mensagem
             Mail->>DAO: Carregar e-mail
             DAO-->>Mail: Dados da mensagem
-            Mail->>Resend: Enviar template com o mesmo código
-            Resend-->>Mail: Aceite ou falha
+            Mail->>Delivery: Enviar template com o mesmo código
+            Delivery-->>Mail: Aceite ou falha
             Mail->>DAO: Atualizar sent ou failed
           end
         else Sem configuração

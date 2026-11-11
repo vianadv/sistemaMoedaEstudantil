@@ -16,7 +16,7 @@ export function serve({port=Number(process.env.PORT||3000),dbPath=process.env.DB
     const url=new URL(req.url,'http://'+(req.headers.host||'localhost'));let response;
     if(url.pathname.startsWith('/api/')){
       let body='';for await(const chunk of req){body+=chunk; if(body.length>900000){res.writeHead(413);res.end('Arquivo muito grande');return;}}
-      response=await api(new Request(url,{method:req.method,headers:req.headers,body:['GET','HEAD'].includes(req.method)?undefined:body}),{DB,RESEND_API_KEY:process.env.RESEND_API_KEY,EMAIL_FROM:process.env.EMAIL_FROM});
+      response=await api(new Request(url,{method:req.method,headers:req.headers,body:['GET','HEAD'].includes(req.method)?undefined:body}),{DB,EMAIL_PROVIDER:process.env.EMAIL_PROVIDER,RESEND_API_KEY:process.env.RESEND_API_KEY,EMAIL_FROM:process.env.EMAIL_FROM,GMAIL_USER:process.env.GMAIL_USER,GMAIL_APP_PASSWORD:process.env.GMAIL_APP_PASSWORD});
     }else{
       const allowed={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/assets/cafe.svg':'assets/cafe.svg','/assets/material.svg':'assets/material.svg'};
       const file=allowed[url.pathname];response=file?new Response(fs.readFileSync(path.join(root,'src/views',file)),{headers:{'Content-Type':file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':'application/javascript; charset=utf-8'}}):new Response('Não encontrado',{status:404});

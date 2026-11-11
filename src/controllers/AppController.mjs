@@ -1,12 +1,13 @@
 import {Repository} from '../models/Repository.mjs';
 import {MeritService} from '../services/MeritService.mjs';
+import {emailProvider} from '../services/EmailService.mjs';
 import {seed} from '../services/seed.mjs';
 import {uid,digest,passwordHash,passwordMatches,check,text,email,cpf,integer,publicUser} from '../services/security.mjs';
 const json=(body,status=200,headers={})=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...headers}});
 export async function api(request,env){
   try{
     const url=new URL(request.url), path=url.pathname.replace(/^\/api/,'');const repo=new Repository(env.DB),service=new MeritService(repo,env);
-    if(path==='/health')return json({ok:true,app:'Meritus',database:!!(await repo.one('SELECT 1 ok')),emailConfigured:!!(env.RESEND_API_KEY&&env.EMAIL_FROM)});
+    if(path==='/health')return json({ok:true,app:'Meritus',database:!!(await repo.one('SELECT 1 ok')),emailConfigured:!!emailProvider(env)});
     await seed(repo);
     if(!['GET','HEAD'].includes(request.method)){
       check(!request.headers.get('Origin')||request.headers.get('Origin')===url.origin,'Origem não permitida.',403);
@@ -35,7 +36,7 @@ export async function api(request,env){
     if(user.role==='teacher'){await service.semester(user);user=await repo.one('SELECT * FROM users WHERE id=?',user.id);}
     const role=(...roles)=>check(roles.includes(user.role),'Seu perfil não possui acesso a esta operação.',403);
     if(path==='/logout'&&request.method==='POST'){await repo.run('DELETE FROM sessions WHERE token_hash=?',hashed);return json({ok:true},200,{'Set-Cookie':'meritus_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'});}
-    if(path==='/me'&&request.method==='GET')return json({user:publicUser(user),emailConfigured:!!(env.RESEND_API_KEY&&env.EMAIL_FROM)});
+    if(path==='/me'&&request.method==='GET')return json({user:publicUser(user),emailConfigured:!!emailProvider(env)});
     if(path==='/me'&&request.method==='PUT'){
       role('student','partner');const name=text(b.name,'Nome'),em=email(b.email),address=text(b.address,'Endereço',5,300);
       if(user.role==='student'){check(await repo.one('SELECT id FROM institutions WHERE id=?',b.institution_id),'Instituição inválida.');await repo.run('UPDATE users SET name=?,email=?,address=?,cpf=?,rg=?,institution_id=?,course=? WHERE id=?',name,em,address,cpf(b.cpf),text(b.rg,'RG'),b.institution_id,text(b.course,'Curso'),user.id);}
@@ -66,7 +67,7 @@ export async function api(request,env){
       const r=await repo.run("UPDATE coupons SET status='used',used_at=CURRENT_TIMESTAMP WHERE id=? AND status='available'",c.id);check(r.meta.changes===1,'Cupom já utilizado.',409);return json({message:`Cupom confirmado: ${c.title}.`,coupon:{...c,status:'used'}});
     }
     if(path==='/emails'&&request.method==='GET')return json(await repo.all('SELECT * FROM emails WHERE user_id=? ORDER BY created_at DESC,rowid DESC LIMIT 100',user.id));
-    if(path==='/emails/retry'&&request.method==='POST'){const rows=await repo.all("SELECT id FROM emails WHERE user_id=? AND status!='sent' LIMIT 20",user.id);await service.mail.deliver(rows.map(r=>r.id));return json({message:env.RESEND_API_KEY&&env.EMAIL_FROM?'Tentativa concluída. Confira o status.':'Modo demonstração: configure RESEND_API_KEY e EMAIL_FROM para envio real.'});}
+    if(path==='/emails/retry'&&request.method==='POST'){const rows=await repo.all("SELECT id FROM emails WHERE user_id=? AND status!='sent' LIMIT 20",user.id);await service.mail.deliver(rows.map(r=>r.id));return json({message:emailProvider(env)?'Tentativa concluída. Confira o status.':'Modo demonstração: o remetente de e-mail do Meritus ainda não foi configurado.'});}
     return json({error:'Rota não encontrada.'},404);
   }catch(e){
     let message=e.message||'Erro inesperado.',status=e.status||500;

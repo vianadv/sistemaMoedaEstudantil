@@ -32,6 +32,10 @@ classDiagram
   class EmailService {
     +deliver(ids)
   }
+  class GmailService {
+    <<module>>
+    +sendGmail(message, env)
+  }
   class Repository {
     +one(sql, args)
     +all(sql, args)
@@ -44,6 +48,7 @@ classDiagram
   MeritService --> Repository : persiste lote atômico
   MeritService --> EmailService : entrega após commit
   EmailService --> Repository : atualiza status
+  EmailService --> GmailService : SMTP com TLS
 ```
 
 ## Componentes MVC
@@ -60,6 +65,8 @@ flowchart LR
   E --> R
   R --> DB[(SQLite local ou D1)]
   E -->|HTTPS após commit| P[Resend]
+  E --> G[GmailService]
+  G -->|SMTP com TLS após commit| S[smtp.gmail.com]
 ```
 
 As rotas de CRUD e leitura usam diretamente `Repository`; os serviços encapsulam as operações de moedas e entrega de e-mail. O controlador também continua usando o módulo de segurança e o seed conforme a [arquitetura geral](../ARQUITETURA.md).

@@ -12,6 +12,7 @@ Um monólito web, com uma interface e uma API no mesmo domínio. Não há micros
 | Controller | função `api()` em `src/controllers/AppController.mjs` | Interpretar HTTP, autenticar, autorizar, validar entrada e devolver JSON |
 | Model / domínio | `MeritService`, `EmailService` e registros do banco | Aplicar reconhecimento, resgate, semestre e notificação |
 | Model / mensagens | `emailTemplates.mjs` | Compor confirmações de reconhecimento e cupons com texto próprio para cada destinatário |
+| Adaptador de e-mail | `GmailService.sendGmail` | Entregar os textos por SMTP com TLS, usando um remetente do sistema |
 | Model / persistência | `Repository` | Encapsular `one`, `all`, `run` e `batch`, com parâmetros SQL |
 | Adaptadores | `server.mjs`, `worker/app.mjs` | Traduzir ambiente Node/SQLite ou Worker/D1 para o mesmo controlador |
 
@@ -47,7 +48,9 @@ Senhas derivadas com PBKDF2/SHA-256, 100.000 iterações e salt aleatório. O ba
 
 As mensagens nascem na mesma transação das moedas. `emailTemplates.mjs` centraliza os templates em texto simples: `recognitionTemplates` retorna recebimento do aluno e confirmação do professor; `couponTemplates` retorna cupom do aluno e conferência da empresa com o mesmo código. O texto é persistido na outbox e enviado ao provedor no campo `text`, sem migração de banco.
 
-Envio é posterior ao commit e não desfaz um reconhecimento ou resgate válido se o provedor falhar. Status: pending, sent ou failed. A tentativa utiliza o id da mensagem como chave de idempotência do provedor. O usuário pode tentar reenviar suas próprias mensagens; as já enviadas são ignoradas. Sem chave ou remetente configurado, as mensagens permanecem pendentes e a interface informa modo demonstração. Um produto em produção precisaria de fila/retry automático, monitoramento e políticas operacionais.
+Envio é posterior ao commit e não desfaz um reconhecimento ou resgate válido se o provedor falhar. Status: pending, sent ou failed. `emailProvider` seleciona Gmail ou Resend conforme a configuração. Gmail usa `node:tls` em `smtp.gmail.com:465`, com verificação de certificado e senha de app. O remetente é a conta técnica configurada; o destino é `emails.recipient`, originado no cadastro.
+
+Na opção Resend, o id da mensagem é a chave de idempotência do provedor. No SMTP Gmail, ele compõe um `Message-ID` estável, que não garante deduplicação se a confirmação do provedor for perdida. O usuário pode tentar reenviar suas próprias mensagens; as já enviadas são ignoradas. Sem configuração, as mensagens ficam pendentes. O build mantém `node:tls` como módulo nativo, atendido pela compatibilidade Node do Worker. Veja [EMAIL.md](EMAIL.md) para configuração e limites da confirmação de entrega.
 
 Os [modelos da Release 2](release-2/modelos.md) e os [diagramas de sequência](release-2/sequencias/README.md) mostram a correspondência dessas operações com os métodos reais. Os modelos da Release 1 permanecem versionados em `docs/sprints/`.
 

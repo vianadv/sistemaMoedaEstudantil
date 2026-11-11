@@ -7,7 +7,7 @@ sequenceDiagram
   participant DAO as Repository
   participant DB as SQLite ou D1
   participant Mail as EmailService
-  participant Resend
+  participant Delivery as Gmail SMTP ou Resend
   Professor->>View: Selecionar aluno, quantidade e motivo
   View->>Controller: POST /api/recognitions + chave + cookie
   Controller->>Controller: Autenticar e exigir perfil teacher
@@ -39,8 +39,8 @@ sequenceDiagram
         loop Para cada mensagem ainda não enviada
           Mail->>DAO: one(e-mail por id)
           DAO-->>Mail: Destinatário, assunto e corpo
-          Mail->>Resend: POST /emails com Idempotency-Key
-          Resend-->>Mail: Aceite ou falha
+          Mail->>Delivery: Enviar pelo provedor configurado
+          Delivery-->>Mail: Aceite ou falha
           Mail->>DAO: run(status sent ou failed)
         end
       else Sem chave ou remetente

@@ -50,12 +50,12 @@ O exemplo termina com 150 moedas **se o aluno começou em zero**. A base é pers
 - Resgate atômico, cupom único e conferência presencial pelo parceiro dono do cupom.
 - Duas confirmações de reconhecimento (professor e aluno), com templates distintos e mesma referência, registradas na mesma transação das moedas.
 - Dois templates de cupom (aluno e empresa), com o mesmo código e instruções para cada perfil, registrados em outbox.
-- Integração para envio externo via Resend e tentativa manual de reenvio.
+- Envio para os e-mails cadastrados via Gmail ou Resend, com um remetente do sistema e tentativa manual de reenvio.
 - MVC, DAO com consultas parametrizadas, SQLite local e D1 na hospedagem.
 
 ### Condição importante: e-mail
 
-**Sem `RESEND_API_KEY` e `EMAIL_FROM`, e-mails não são enviados para caixas externas.** Ficam registrados no banco com status pendente, e a interface informa "Modo demonstração". Isso permite demonstrar o conteúdo, mas **não substitui o requisito de entrega real de e-mail**. A integração está implementada; configure o provedor e use destinatários reais para concluir essa verificação. Veja [a configuração de execução e e-mail](docs/EXECUCAO.md).
+**O envio real precisa de um remetente autorizado do Meritus.** Gmail pode ser usado sem Resend e sem domínio próprio, com `GMAIL_USER` e `GMAIL_APP_PASSWORD`. A opção Resend continua disponível com `RESEND_API_KEY` e `EMAIL_FROM`. Os destinatários vêm dos cadastros; os usuários não conectam suas contas para receber. Sem configuração, as mensagens permanecem pendentes na caixa de saída. Veja [a configuração de e-mail](docs/EMAIL.md). Credenciais configuradas precisam ser verificadas com uma entrega real antes de afirmar atendimento integral ao requisito.
 
 ## Testes
 

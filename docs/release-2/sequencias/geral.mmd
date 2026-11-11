@@ -7,7 +7,7 @@ sequenceDiagram
   participant Service as MeritService
   participant Templates as emailTemplates
   participant DAO as Repository / Banco
-  participant Mail as EmailService / Resend
+  participant Mail as EmailService / Gmail ou Resend
   Note over View,DAO: Cada perfil usa sua própria sessão. Todas as rotas de negócio exigem autenticação
   Professor->>View: Entrar com e-mail e senha
   View->>Controller: POST /api/login

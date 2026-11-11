@@ -37,6 +37,6 @@ npm run build
 
 O servidor local não precisa de dependências externas. A instalação é necessária para gerar o Worker. Veja [EXECUCAO.md](../EXECUCAO.md) para configurar e-mail e [CLOUDFLARE.md](../CLOUDFLARE.md) para publicação.
 
-Sem `RESEND_API_KEY` e `EMAIL_FROM`, os templates podem ser conferidos em Notificações dos respectivos perfis, com status pendente e indicação de modo demonstração. Os testes simulam a API do provedor; não comprovam entrega em caixas externas. Para demonstrar envio real, configure o provedor e use endereços válidos, pois os perfis `@meritus.demo` são fictícios.
+Sem um remetente configurado, os templates podem ser conferidos em Notificações dos respectivos perfis com status pendente. A integração aceita Gmail (sem domínio próprio) ou Resend; veja [EMAIL.md](../EMAIL.md). Os testes simulam o transporte do provedor e não comprovam entrega em caixas externas. Para demonstrar envio real, autorize o remetente e use endereços válidos, pois os perfis `@meritus.demo` são fictícios.
 
 As pastas registram o escopo e os artefatos desta atualização. Apresentações semanais, participação em aula e eventual gravação de vídeo dependem de realização pelo grupo; estes arquivos não afirmam que ocorreram.
