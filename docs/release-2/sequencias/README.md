@@ -354,4 +354,3 @@ sequenceDiagram
     Controller-->>View: 404 ou 409, troca recusada
   end
 ```
-
