@@ -1,5 +1,21 @@
 # Validação
 
+## Release 2 - 11/11/2026
+
+Verificações executadas na cópia local desta atualização:
+
+- `node --test tests/*.test.mjs`: **23 testes aprovados, zero falhas**, incluindo a suíte anterior e dez testes adicionais da Release 2.
+- `npm ci` e `npm run build`: dependências do lockfile instaladas e Worker compilado com sucesso.
+- Módulo compilado do Worker executado com SQLite isolado em memória: `/`, `/app.js`, `/style.css` e `/api/health` responderam 200; login e reconhecimento com os novos templates responderam 200 e 201, respectivamente.
+- Os sete arquivos de sequência `.mmd` passaram pelo parser Mermaid. As cópias exibidas em Markdown foram conferidas contra os arquivos, e os links locais dos documentos novos/atualizados foram verificados.
+- `git diff --check`: sem erros de espaços ou marcadores de conflito.
+
+A nova suíte cobre confirmações distintas para professor/aluno com mesma transação, extratos dos dois perfis, rollback se falha a gravação do e-mail do professor, integração simulada de envio e reenvio, idempotência, isolamento das caixas de saída, configuração incompleta, cadastro e catálogo de vantagens, resgate atômico, código comum nos templates de cupom, preservação do título/custo e conferência por empresa proprietária com uso único.
+
+Limites desta execução: SQLite em memória e provedor Resend simulado nos testes; nenhum e-mail foi enviado a caixas externas. O smoke test do Worker usa o adaptador SQLite local, não uma instância D1 hospedada. A compilação local não publica a atualização no site. As evidências de hospedagem abaixo são históricas da Release 1. Não foi registrada nova apresentação em aula nem gravação de vídeo.
+
+## Histórico da Release 1
+
 Em 21/10/2026, a suíte registrou 13 testes aprovados (12 subtestes e o agrupador), zero falhas. Execute o comando abaixo para reproduzir a verificação; o resultado do runner é a evidência da execução atual.
 
 Comando: `node --test tests/*.test.mjs`.

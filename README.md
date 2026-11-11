@@ -2,6 +2,8 @@
 
 Reconhecimento de professores que se transforma em vantagens no campus. Projeto acadêmico do Laboratório de Desenvolvimento de Software, PUC Minas, segundo semestre de 2026.
 
+**Atualização Release 2 (LABDESENV_4):** [entregas Lab04S01, Lab04S02 e Lab04S03](docs/release-2/README.md), com confirmação de envio para o professor, templates de e-mail por perfil, [diagramas de sequência individuais e geral](docs/release-2/sequencias/README.md) e testes dos fluxos. [Comparação entre modelos e código](docs/release-2/modelos.md).
+
 **Repositório:** https://github.com/vianadv/sistemaMoedaEstudantil
 
 **Site público:** https://meritus-estudantil.vianadv.workers.dev
@@ -46,7 +48,8 @@ O exemplo termina com 150 moedas **se o aluno começou em zero**. A base é pers
 - Extratos de professor e aluno; débito de resgates e crédito de recebimentos.
 - Vantagens da empresa com título, descrição, foto e custo; edição e desativação.
 - Resgate atômico, cupom único e conferência presencial pelo parceiro dono do cupom.
-- Mensagem de reconhecimento e duas mensagens de cupom, com o mesmo código, registradas em outbox.
+- Duas confirmações de reconhecimento (professor e aluno), com templates distintos e mesma referência, registradas na mesma transação das moedas.
+- Dois templates de cupom (aluno e empresa), com o mesmo código e instruções para cada perfil, registrados em outbox.
 - Integração para envio externo via Resend e tentativa manual de reenvio.
 - MVC, DAO com consultas parametrizadas, SQLite local e D1 na hospedagem.
 
@@ -74,6 +77,7 @@ drizzle/                   Migração versionada para o banco hospedado
 server.mjs                 Adaptador local Node + SQLite
 worker/                    Adaptador hospedado Cloudflare + D1
 docs/sprints/01,02,03/      Versões propostas dos modelos
+docs/release-2/             Entregas LAB04, modelos e diagramas de sequência
 docs/                      Execução, arquitetura, requisitos, tutorial e testes
 apresentacao/              Slides da apresentação
 ```
@@ -84,6 +88,9 @@ apresentacao/              Slides da apresentação
 
 ## Entrega acadêmica
 
+- [Release 2: escopo, entregas por sprint e evidências](docs/release-2/README.md)
+- [Release 2: diagramas de sequência por caso de uso e geral](docs/release-2/sequencias/README.md)
+- [Release 2: roteiro de demonstração ou gravação](docs/release-2/apresentacao.md)
 - [Pitch curto: 8 slides, fala estimada de 7 a 8 minutos](apresentacao/Meritus_Pitch.pptx)
 - [Execução local, build e configuração de e-mail](docs/EXECUCAO.md)
 - [Matriz de requisitos e evidências](docs/REQUISITOS.md)

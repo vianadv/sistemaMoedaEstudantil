@@ -1,0 +1,53 @@
+sequenceDiagram
+  actor Professor
+  participant View as View (app.js)
+  participant Controller as AppController.api
+  participant Service as MeritService
+  participant Templates as emailTemplates
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  participant Mail as EmailService
+  participant Resend
+  Professor->>View: Selecionar aluno, quantidade e motivo
+  View->>Controller: POST /api/recognitions + chave + cookie
+  Controller->>Controller: Autenticar e exigir perfil teacher
+  Controller->>Service: recognize(teacher, body)
+  Service->>Service: Validar inteiro positivo, motivo e chave
+  Service->>DAO: one(transação pela chave)
+  alt Operação já registrada para este professor
+    DAO-->>Service: Transação existente
+    Service-->>Controller: Reconhecimento já registrado
+    Controller-->>View: 201, sem novo débito ou mensagem
+  else Nova operação
+    Service->>DAO: one(aluno ativo)
+    DAO-->>Service: Aluno e instituição
+    Service->>Service: Exigir mesma instituição
+    Service->>Templates: recognitionTemplates(dados e referência)
+    Templates-->>Service: Mensagem do aluno e mensagem do professor
+    Service->>DAO: batch(transação, e-mail aluno, e-mail professor)
+    DAO->>DB: Executar lote atômico
+    DB->>DB: Verificar saldo e aplicar débito/crédito por gatilhos
+    alt Saldo insuficiente ou falha de persistência
+      DB-->>DAO: Rollback de moedas e mensagens
+      DAO-->>Controller: Erro propagado pelo serviço
+      Controller-->>View: Erro, sem reconhecimento parcial
+    else Commit
+      DB-->>DAO: Transação e duas mensagens persistidas
+      DAO-->>Service: Sucesso
+      Service->>Mail: deliver(ids das duas mensagens)
+      alt Provedor configurado
+        loop Para cada mensagem ainda não enviada
+          Mail->>DAO: one(e-mail por id)
+          DAO-->>Mail: Destinatário, assunto e corpo
+          Mail->>Resend: POST /emails com Idempotency-Key
+          Resend-->>Mail: Aceite ou falha
+          Mail->>DAO: run(status sent ou failed)
+        end
+      else Sem chave ou remetente
+        Note over Mail,DAO: Mensagens permanecem pending em modo demonstração
+      end
+      Service-->>Controller: Reconhecimento registrado
+      Controller-->>View: 201, confirmações disponíveis
+      View-->>Professor: Atualizar saldo e mostrar confirmação
+    end
+  end

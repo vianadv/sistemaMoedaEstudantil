@@ -1,0 +1,59 @@
+sequenceDiagram
+  actor Aluno
+  participant View as View (app.js)
+  participant Controller as AppController.api
+  participant Service as MeritService
+  participant Templates as emailTemplates
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  participant Mail as EmailService
+  participant Resend
+  Aluno->>View: Selecionar vantagem e confirmar custo
+  View->>Controller: POST /api/redemptions com offerId, chave e cookie
+  Controller->>Controller: Autenticar e exigir perfil student
+  Controller->>Service: redeem(student, body)
+  Service->>DAO: one(cupom pela chave)
+  alt Chave já registrada para este aluno
+    DAO-->>Service: Cupom existente
+    Service-->>Controller: Mesmo cupom, sem novo débito ou e-mail
+    Controller-->>View: 201, cupom existente
+  else Nova operação
+    Service->>DAO: one(vantagem e empresa ativas)
+    DAO-->>Service: Vantagem, custo e destinatário da empresa
+    alt Vantagem indisponível
+      Service-->>Controller: Erro 404
+      Controller-->>View: Vantagem indisponível
+    else Vantagem disponível
+      Service->>Service: Gerar código único e copiar título e custo
+      Service->>Templates: couponTemplates(aluno, oferta, código)
+      Templates-->>Service: Mensagem do aluno e mensagem da empresa
+      Service->>DAO: batch(cupom, débito, dois e-mails)
+      DAO->>DB: Executar lote atômico
+      DB->>DB: Gatilhos verificam saldo e descontam moedas
+      alt Saldo insuficiente ou falha de persistência
+        DB-->>DAO: Rollback de cupom, débito e e-mails
+        DAO-->>Controller: Erro propagado pelo serviço
+        Controller-->>View: Erro sem resgate parcial
+      else Commit
+        DB-->>DAO: Cupom, transação e mensagens persistidos
+        DAO-->>Service: Sucesso
+        Service->>Mail: deliver(ids dos dois e-mails)
+        alt Provedor configurado
+          loop Para cada mensagem
+            Mail->>DAO: Carregar e-mail
+            DAO-->>Mail: Dados da mensagem
+            Mail->>Resend: Enviar template com o mesmo código
+            Resend-->>Mail: Aceite ou falha
+            Mail->>DAO: Atualizar sent ou failed
+          end
+        else Sem configuração
+          Note over Mail,DAO: Mensagens ficam pending para consulta no modo demonstração
+        end
+        Service->>DAO: one(cupom persistido)
+        DAO-->>Service: Cupom
+        Service-->>Controller: Cupom emitido
+        Controller-->>View: 201, cupom
+        View-->>Aluno: Mostrar código em Meus cupons e atualizar saldo
+      end
+    end
+  end

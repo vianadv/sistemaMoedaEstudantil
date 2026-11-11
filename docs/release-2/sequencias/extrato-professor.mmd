@@ -1,0 +1,27 @@
+sequenceDiagram
+  actor Professor
+  participant View as View (statementView)
+  participant Controller as AppController.api
+  participant Service as MeritService
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  Professor->>View: Abrir Extrato
+  View->>Controller: GET /api/me + cookie
+  Controller->>DAO: Consultar sessão válida e professor ativo
+  DAO-->>Controller: Professor autenticado
+  Controller->>Service: semester(teacher)
+  Service->>DAO: INSERT OR IGNORE crédito de 1.000 do semestre
+  DAO->>DB: Inserir com unicidade de professor e semestre
+  DB-->>DAO: Crédito aplicado uma vez ou já existente
+  Controller->>DAO: Recarregar usuário com saldo atualizado
+  DAO-->>Controller: Professor e saldo
+  Controller-->>View: Perfil e saldo
+  View->>Controller: GET /api/statement + cookie
+  Controller->>Controller: Autenticar e garantir crédito semestral idempotente
+  Controller->>DAO: all(transações do usuário com nomes)
+  DAO->>DB: SELECT por from_id ou to_id, ordem decrescente
+  DB-->>DAO: Até 200 créditos semestrais e envios
+  DAO-->>Controller: Transações com aluno, motivo, valor e data
+  Controller-->>View: 200, extrato do professor
+  View-->>Professor: Saldo, créditos e débitos
+  Note over Controller,DB: Sessão ausente, expirada ou inativa retorna 401

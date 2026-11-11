@@ -1,0 +1,21 @@
+sequenceDiagram
+  actor Aluno
+  participant View as View (statementView)
+  participant Controller as AppController.api
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  Aluno->>View: Abrir Extrato
+  View->>Controller: GET /api/me + cookie
+  Controller->>DAO: Consultar sessão válida e aluno ativo
+  DAO-->>Controller: Aluno autenticado e saldo
+  Controller-->>View: Perfil e saldo
+  View->>Controller: GET /api/statement + cookie
+  Controller->>DAO: Autenticar sessão
+  DAO-->>Controller: Aluno autenticado
+  Controller->>DAO: all(transações do próprio usuário com nomes)
+  DAO->>DB: SELECT por from_id ou to_id, ordem decrescente
+  DB-->>DAO: Até 200 recebimentos e resgates
+  DAO-->>Controller: Transações com professor, motivo, valor e data
+  Controller-->>View: 200, extrato do aluno
+  View-->>Aluno: Saldo, moedas recebidas e moedas trocadas
+  Note over Controller,DB: O usuário vem da sessão, sem parâmetro para consultar outra conta

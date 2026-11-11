@@ -1,0 +1,77 @@
+sequenceDiagram
+  actor Professor
+  actor Aluno
+  actor Empresa
+  participant View as View HTML/CSS/JS
+  participant Controller as AppController.api
+  participant Service as MeritService
+  participant Templates as emailTemplates
+  participant DAO as Repository / Banco
+  participant Mail as EmailService / Resend
+  Note over View,DAO: Cada perfil usa sua própria sessão. Todas as rotas de negócio exigem autenticação
+  Professor->>View: Entrar com e-mail e senha
+  View->>Controller: POST /api/login
+  Controller->>DAO: Conferir usuário, senha e registrar hash da sessão
+  Controller-->>View: Cookie HttpOnly
+  View->>Controller: GET /api/me
+  Controller->>Service: semester(professor)
+  Service->>DAO: Crédito único de 1.000 por semestre, acumulável
+  Controller-->>View: Professor e saldo atualizado
+  Professor->>View: Enviar moedas com aluno e motivo
+  View->>Controller: POST /api/recognitions
+  Controller->>Service: recognize(professor, dados)
+  Service->>DAO: Verificar chave, aluno e instituição
+  Service->>Templates: recognitionTemplates(dados)
+  Templates-->>Service: Confirmação do professor e recebimento do aluno
+  Service->>DAO: Lote atômico de transação e duas mensagens
+  Note over Service,DAO: Gatilhos impedem saldo insuficiente e atualizam os dois saldos
+  Service->>Mail: Tentar entregar mensagens após commit
+  Mail->>DAO: Registrar status de cada mensagem
+  Controller-->>View: Reconhecimento registrado
+  Professor->>View: Consultar Extrato e Notificações
+  View->>Controller: GET /api/statement e GET /api/emails
+  Controller->>DAO: Consultar registros do professor autenticado
+  Controller-->>View: Envios e confirmação
+  Empresa->>View: Entrar com e-mail e senha
+  View->>Controller: POST /api/login
+  Controller->>DAO: Autenticar empresa e criar sessão
+  Controller-->>View: Cookie HttpOnly
+  Empresa->>View: Cadastrar título, descrição, foto e custo
+  View->>Controller: POST /api/offers
+  Controller->>DAO: Validar perfil/dados e inserir oferta da empresa
+  Controller-->>View: Vantagem salva
+  Aluno->>View: Entrar com e-mail e senha
+  View->>Controller: POST /api/login
+  Controller->>DAO: Autenticar aluno e criar sessão
+  Controller-->>View: Cookie HttpOnly
+  Aluno->>View: Consultar saldo, Extrato e Notificações
+  View->>Controller: GET /api/me, /api/statement e /api/emails
+  Controller->>DAO: Consultar registros do aluno autenticado
+  Controller-->>View: Saldo, recebimentos e mensagem do aluno
+  Aluno->>View: Abrir catálogo
+  View->>Controller: GET /api/offers
+  Controller->>DAO: Listar vantagens ativas de empresas ativas
+  Controller-->>View: Catálogo com foto e custo
+  Aluno->>View: Confirmar resgate
+  View->>Controller: POST /api/redemptions
+  Controller->>Service: redeem(aluno, dados)
+  Service->>DAO: Verificar chave e vantagem disponível
+  Service->>Templates: couponTemplates(aluno, oferta, código)
+  Templates-->>Service: Templates do aluno e da empresa com mesmo código
+  Service->>DAO: Lote atômico de cupom, débito e dois e-mails
+  Note over Service,DAO: Falha reverte o lote. Repetir chave retorna o cupom existente
+  Service->>Mail: Tentar entregar mensagens após commit
+  Mail->>DAO: Registrar sent, failed ou manter pending sem configuração
+  Controller-->>View: Cupom único
+  View-->>Aluno: Código e saldo atualizado
+  Aluno->>Empresa: Apresentar código na troca presencial
+  Empresa->>View: Conferir código em sua sessão
+  View->>Controller: POST /api/coupons/validate
+  Controller->>DAO: Consultar cupom da empresa e atualizar available para used
+  alt Cupom disponível da empresa
+    DAO-->>Controller: Uma linha alterada
+    Controller-->>View: Utilização confirmada
+    View-->>Empresa: Entregar vantagem
+  else Código alheio, inexistente ou já usado
+    Controller-->>View: 404 ou 409, troca recusada
+  end

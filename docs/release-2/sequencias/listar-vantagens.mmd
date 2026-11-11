@@ -1,0 +1,26 @@
+sequenceDiagram
+  actor Aluno
+  participant View as View (homeView)
+  participant Controller as AppController.api
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  Aluno->>View: Abrir Vantagens
+  View->>Controller: GET /api/me + cookie
+  Controller->>DAO: Autenticar sessão e consultar saldo
+  DAO-->>Controller: Aluno ativo e saldo
+  Controller-->>View: Perfil e saldo
+  View->>Controller: GET /api/offers + cookie
+  Controller->>DAO: Autenticar sessão
+  DAO-->>Controller: Aluno autenticado
+  Controller->>DAO: all(ofertas ativas de empresas ativas)
+  DAO->>DB: SELECT offers JOIN users com filtros active
+  DB-->>DAO: Título, descrição, foto, custo e empresa
+  DAO-->>Controller: Catálogo
+  Controller-->>View: 200, lista de vantagens
+  alt Catálogo vazio
+    View-->>Aluno: Nenhuma vantagem cadastrada
+  else Há vantagens
+    View-->>Aluno: Cartões de vantagens e saldo disponível
+    Note over View,Aluno: Botão de resgate desabilitado se o saldo exibido for insuficiente
+  end
+  Note over Controller,DB: O resgate valida novamente oferta e saldo no servidor

@@ -30,6 +30,8 @@ node --env-file-if-exists=.env server.mjs
 
 Para enviar e-mails externos, configure uma conta Resend, um remetente verificado e destinatários válidos. Os endereços `@meritus.demo` são fictícios. Sem configuração, o conteúdo fica registrado na caixa de saída com status pendente; a interface indica modo demonstração. Uma tentativa de envio pode ser iniciada na própria caixa de saída. Essa situação não comprova entrega real de e-mail.
 
+Na Release 2, cada novo reconhecimento gera duas confirmações: recebimento para o aluno e envio para o professor. Cada resgate gera um cupom para o aluno e uma mensagem de conferência para a empresa, com o mesmo código. Os quatro templates estão em `src/services/emailTemplates.mjs`. Entre nos respectivos perfis e abra **Notificações** para conferir os textos e seus status. Configuração incompleta (por exemplo, chave sem remetente) mantém o modo demonstração.
+
 Na Cloudflare, configure esses valores como secrets, sem escrevê-los no arquivo de configuração:
 
 ```sh

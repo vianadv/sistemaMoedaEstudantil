@@ -1,0 +1,29 @@
+sequenceDiagram
+  actor Empresa
+  participant View as View (offerForm)
+  participant Controller as AppController.api
+  participant DAO as Repository
+  participant DB as SQLite ou D1
+  Empresa->>View: Informar título, descrição, foto e custo
+  View->>Controller: POST /api/offers + cookie
+  Controller->>DAO: Consultar sessão e usuário ativo
+  DAO-->>Controller: Usuário autenticado
+  alt Perfil diferente de partner
+    Controller-->>View: 403, acesso negado
+  else Empresa autenticada
+    Controller->>Controller: Validar campos, custo inteiro positivo e foto
+    alt Dados inválidos
+      Controller-->>View: 400, erro de validação
+      View-->>Empresa: Corrigir formulário
+    else Dados válidos
+      Controller->>DAO: run(INSERT oferta com partner_id da sessão)
+      DAO->>DB: Persistir vantagem ativa
+      DB-->>DAO: Sucesso
+      Controller-->>View: 201, vantagem salva
+      View->>Controller: GET /api/me e GET /api/offers
+      Controller->>DAO: Consultar perfil e vantagens da empresa
+      DAO-->>Controller: Perfil e catálogo próprio
+      Controller-->>View: Dados atualizados
+      View-->>Empresa: Exibir vantagem cadastrada
+    end
+  end

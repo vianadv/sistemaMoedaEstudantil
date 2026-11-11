@@ -11,6 +11,7 @@ Um monólito web, com uma interface e uma API no mesmo domínio. Não há micros
 | View | `src/views/index.html`, `style.css`, `app.js` | Exibir formulários, navegar entre perfis, chamar API e mostrar feedback |
 | Controller | função `api()` em `src/controllers/AppController.mjs` | Interpretar HTTP, autenticar, autorizar, validar entrada e devolver JSON |
 | Model / domínio | `MeritService`, `EmailService` e registros do banco | Aplicar reconhecimento, resgate, semestre e notificação |
+| Model / mensagens | `emailTemplates.mjs` | Compor confirmações de reconhecimento e cupons com texto próprio para cada destinatário |
 | Model / persistência | `Repository` | Encapsular `one`, `all`, `run` e `batch`, com parâmetros SQL |
 | Adaptadores | `server.mjs`, `worker/app.mjs` | Traduzir ambiente Node/SQLite ou Worker/D1 para o mesmo controlador |
 
@@ -21,9 +22,9 @@ O Model não precisa ser um ORM. Escolhemos o padrão **DAO**, opção expressam
 1. A View envia aluno, quantidade, motivo e chave de operação.
 2. O Controller verifica sessão, perfil de professor e origem da requisição.
 3. `MeritService.recognize()` verifica valor inteiro, motivo, aluno ativo e mesma instituição.
-4. O DAO insere transação e mensagem no mesmo lote.
+4. `recognitionTemplates` compõe a confirmação de envio do professor e a confirmação de recebimento do aluno. O DAO insere a transação e as duas mensagens no mesmo lote.
 5. O gatilho do banco impede saldo insuficiente e movimenta os dois saldos.
-6. `EmailService.deliver()` tenta enviar a mensagem, quando configurado.
+6. Após o commit, `EmailService.deliver()` tenta enviar as duas mensagens, quando configurado. Uma falha de entrega não desfaz as moedas.
 7. A View consulta novamente saldo e extrato.
 
 ## Integridade das moedas
@@ -44,7 +45,11 @@ Senhas derivadas com PBKDF2/SHA-256, 100.000 iterações e salt aleatório. O ba
 
 ## E-mail e outbox
 
-A mensagem nasce na mesma transação das moedas. Envio é posterior e não desfaz um reconhecimento válido se o provedor falhar. Status: pending, sent ou failed. A tentativa utiliza chave de idempotência do provedor. O usuário pode tentar reenviar suas próprias mensagens. Sem configuração externa, a interface informa o modo demonstração. Um produto em produção precisaria de fila/retry automático, monitoramento e políticas operacionais.
+As mensagens nascem na mesma transação das moedas. `emailTemplates.mjs` centraliza os templates em texto simples: `recognitionTemplates` retorna recebimento do aluno e confirmação do professor; `couponTemplates` retorna cupom do aluno e conferência da empresa com o mesmo código. O texto é persistido na outbox e enviado ao provedor no campo `text`, sem migração de banco.
+
+Envio é posterior ao commit e não desfaz um reconhecimento ou resgate válido se o provedor falhar. Status: pending, sent ou failed. A tentativa utiliza o id da mensagem como chave de idempotência do provedor. O usuário pode tentar reenviar suas próprias mensagens; as já enviadas são ignoradas. Sem chave ou remetente configurado, as mensagens permanecem pendentes e a interface informa modo demonstração. Um produto em produção precisaria de fila/retry automático, monitoramento e políticas operacionais.
+
+Os [modelos da Release 2](release-2/modelos.md) e os [diagramas de sequência](release-2/sequencias/README.md) mostram a correspondência dessas operações com os métodos reais. Os modelos da Release 1 permanecem versionados em `docs/sprints/`.
 
 ## Ambientes
 
