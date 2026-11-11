@@ -1,5 +1,16 @@
 # Validação
 
+## Integração Gmail - 11/11/2026
+
+- `node --test tests/*.test.mjs`: 31 testes aprovados, zero falhas.
+- Oito testes adicionais verificam configuração Gmail/Resend, opções TLS com certificado obrigatório, protocolo SMTP com respostas fragmentadas, codificação de assunto/corpo em português, destino do cadastro, recusa de autenticação/destinatário, desconexão, timeout, proteção contra injeção de cabeçalho, status da outbox e reenvio sem alterar as moedas.
+- O transporte SMTP é simulado nos testes; eles não usam nem comprovam autorização de uma conta Google real.
+- `npm run build`: concluído com `node:tls` externo, atendido pela compatibilidade Node do Worker.
+- A configuração local vazia foi recusada antes de contatar a Cloudflare; `.env.gmail.json` foi confirmado como ignorado pelo Git. Nenhuma credencial foi incluída no repositório.
+- Publicada a versão `e294f290-bebf-42f7-957f-97158cd037a3`. A verificação pública somente de leitura confirmou HTTP 200, banco ativo e os avisos atualizados da interface.
+
+Limite pendente: `emailConfigured: false`. Sem autorização de um remetente não foi possível ativar ou verificar entrega externa. Os testes e a publicação do código não substituem essa autorização.
+
 ## Release 2 - 11/11/2026
 
 Verificações executadas na cópia local desta atualização:

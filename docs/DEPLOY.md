@@ -4,6 +4,12 @@ URL pública: https://meritus-estudantil.vianadv.workers.dev
 
 Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
+## Integração Gmail publicada em 11/11/2026
+
+Código `b8cb532`, versão Cloudflare `e294f290-bebf-42f7-957f-97158cd037a3`. A atualização adiciona Gmail por SMTP/TLS como alternativa ao Resend, com remetente único do sistema e destinatários originados nos cadastros. O banco foi preservado. A interface explica a situação do envio sem apresentar nomes de credenciais aos usuários.
+
+A suíte registrou 31 testes aprovados e o build concluiu. Após o deploy, `/api/health` retornou 200 e `database: true`; o JavaScript público contém os novos avisos. **O envio real ainda está inativo (`emailConfigured: false`)**, pois não foi fornecida autorização de uma conta remetente. Não houve teste de entrega em caixa externa. A ativação está documentada em [EMAIL.md](EMAIL.md); ela exige a credencial do remetente, que não pode ser criada pelo código da aplicação.
+
 ## Release 2 publicada em 11/11/2026
 
 A Release 2 foi integrada à `main` e publicada no endereço acima. Código da atualização: `9bbf19f`. A Cloudflare confirmou a versão `8654a682-4ca0-4de2-84e5-7c2251dcad5f`, atendendo 100% do tráfego. O banco D1 existente foi preservado, sem reaplicar o esquema nem criar migração.
