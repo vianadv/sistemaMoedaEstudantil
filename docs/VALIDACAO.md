@@ -12,7 +12,15 @@ Verificações executadas na cópia local desta atualização:
 
 A nova suíte cobre confirmações distintas para professor/aluno com mesma transação, extratos dos dois perfis, rollback se falha a gravação do e-mail do professor, integração simulada de envio e reenvio, idempotência, isolamento das caixas de saída, configuração incompleta, cadastro e catálogo de vantagens, resgate atômico, código comum nos templates de cupom, preservação do título/custo e conferência por empresa proprietária com uso único.
 
-Limites desta execução: SQLite em memória e provedor Resend simulado nos testes; nenhum e-mail foi enviado a caixas externas. O smoke test do Worker usa o adaptador SQLite local, não uma instância D1 hospedada. A compilação local não publica a atualização no site. As evidências de hospedagem abaixo são históricas da Release 1. Não foi registrada nova apresentação em aula nem gravação de vídeo.
+Limites desta execução: SQLite em memória e provedor Resend simulado nos testes; nenhum e-mail foi enviado a caixas externas. O smoke test do Worker usa o adaptador SQLite local, não uma instância D1 hospedada. A publicação efetiva da Release 2 está registrada a seguir. Não foi registrada nova apresentação em aula nem gravação de vídeo.
+
+## Publicação da Release 2 - 11/11/2026
+
+A atualização foi integrada e enviada à `main`. Após nova autorização do proprietário na Cloudflare, o Worker foi publicado com sucesso em `https://meritus-estudantil.vianadv.workers.dev`. Versão confirmada: `8654a682-4ca0-4de2-84e5-7c2251dcad5f`, com 100% do tráfego conforme `wrangler deployments list`.
+
+As verificações públicas foram feitas sem criar transações de negócio: `/`, `/app.js`, `/style.css` e `/api/health` retornaram 200; `database: true`; `/api/offers` e `/api/statement` retornaram 401 sem sessão. Os testes de escrita foram executados na base isolada, com os mesmos 23 resultados aprovados. Nenhuma migração foi reaplicada ao D1 existente.
+
+O envio externo permanece pendente de conectar um remetente: `emailConfigured: false` e nenhuma configuração de e-mail nos secrets do Worker. Não houve teste de entrega real. A geração das mensagens e os fluxos de envio, extrato e resgate estão publicados; a outbox continua em modo demonstração até a configuração da conta de envio.
 
 ## Histórico da Release 1
 

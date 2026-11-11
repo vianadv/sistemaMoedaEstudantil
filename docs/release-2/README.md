@@ -2,6 +2,8 @@
 
 Continuação da Release 1, conforme o enunciado `LABDESENV_4 (1).pdf`, páginas 1 e 2, fornecido em 04/11/2026. O cabeçalho do documento diz Laboratório 3; os marcos desta continuação são **Lab04S01, Lab04S02 e Lab04S03**.
 
+**Publicada em 11/11/2026:** [abrir o sistema](https://meritus-estudantil.vianadv.workers.dev). A atualização foi integrada à `main` e o Worker está atendendo com o banco D1 existente. [Registro de publicação e verificações](../DEPLOY.md). O envio de e-mails para caixas externas ainda depende de conectar uma conta autorizada; as mensagens estão disponíveis na outbox.
+
 ## Entregas por sprint
 
 | Marco | Requisitos | Código e evidência |
