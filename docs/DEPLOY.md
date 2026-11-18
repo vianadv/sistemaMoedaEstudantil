@@ -4,6 +4,12 @@ URL pública: https://meritus-estudantil.vianadv.workers.dev
 
 Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
+## E-mail do professor atualizado em 18/11/2026
+
+Código `04f4f6c`, versão `ccb2c5bc-a23e-42fc-b6bb-e890b90cbfb7`. O e-mail de uma única conta de professor foi atualizado no D1 para o endereço confirmado pelo responsável, sem alterar senha, saldo ou histórico. O endereço pessoal não foi inserido no código nem nesta documentação pública.
+
+O atalho de demonstração continua funcionando após a troca, com a mesma verificação de senha. O login pelo novo endereço e pelo atalho retornou HTTP 200 para a mesma conta no site; ambas as sessões de verificação foram encerradas. Nenhuma transferência, resgate ou mensagem de teste foi criada. `/api/health` confirmou banco ativo e e-mail configurado. Os 38 testes locais passaram, incluindo regressões de autenticação e destinatário atualizado; o build concluiu.
+
 ## MailerSend ativado em 18/11/2026
 
 Código `02b504f`, publicado inicialmente como `9f27252d-6ba3-4a04-a9c1-a709429932d2`. Após guardar as três configurações privadas (`EMAIL_PROVIDER`, `MAILERSEND_API_KEY` e `MAILERSEND_FROM`), a versão ativa passou a `ea623f85-0619-4da8-b131-dcaaa0844795`, com 100% do tráfego. Não houve migração nem alteração de dados do D1. A chave fica fora do GitHub e não aparece nos logs de configuração.

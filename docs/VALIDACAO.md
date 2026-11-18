@@ -1,5 +1,11 @@
 # Validação
 
+## Atualização de e-mail do professor - 18/11/2026
+
+38 testes aprovados, zero falhas, e build concluído. As duas verificações adicionais cobrem o login com o endereço novo e o atalho de demonstração, recusa de senha incorreta/conta inativa, prioridade de um endereço pertencente a outra conta e destinatário atualizado das próximas confirmações.
+
+A atualização de e-mail no D1 afetou uma única conta autorizada. Na versão `ccb2c5bc-a23e-42fc-b6bb-e890b90cbfb7`, os dois acessos do professor responderam HTTP 200 e apontaram para a mesma conta com o endereço atualizado. As sessões foram encerradas; não houve envio de moedas, resgate ou e-mail nessa verificação. Banco e configuração de e-mail continuaram ativos.
+
 ## MailerSend - 18/11/2026
 
 - `npm test`: 36 testes aprovados, zero falhas; `npm run build`: concluído.
