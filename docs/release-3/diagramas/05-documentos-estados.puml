@@ -1,0 +1,35 @@
+@startuml
+!pragma layout smetana
+title Figura 5 - DocumentoResgate (proposta S01)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam state {
+  BackgroundColor #F1F6F3
+  BorderColor #315B51
+  FontColor #173E35
+}
+hide empty description
+state "Solicitado" as Solicitado
+state "Preparado" as Preparado
+state "Falha de emissão" as Falha
+state "Disponível" as Disponivel
+state "Somente histórico" as Historico
+[*] --> Solicitado : / obter código único\ndo contexto do resgate
+Solicitado --> Preparado : criarDocumento [criador e campos válidos]\n/ construir produto concreto
+Solicitado --> Falha : validar [categoria ou dados inválidos]\n/ recusar antes do débito
+Preparado --> Disponivel : confirmar lote [commit]\n/ persistir documento, débito e notificações
+Preparado --> Falha : persistir [falha no lote]\n/ rollback completo
+Falha --> Solicitado : tentar novamente [dados corrigidos]\n/ usar a mesma chave da operação
+Disponivel --> Disponivel : consultar ou reenviar [dono autenticado]\n/ reutilizar documento e código
+Disponivel --> Disponivel : falhar e-mail [documento persistido]\n/ registrar falha; não cobrar outra vez
+Disponivel --> Historico : encerrar resgate [confirmado, cancelado ou expirado]\n/ exibir situação; impedir novo uso
+Historico --> [*]
+note bottom of Preparado
+  Factory Method cria o produto.
+  Preparado não significa
+  que houve commit financeiro.
+end note
+@enduml

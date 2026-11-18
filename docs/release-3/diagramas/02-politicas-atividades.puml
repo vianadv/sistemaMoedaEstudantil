@@ -1,0 +1,43 @@
+@startuml
+!pragma useVerticalIf on
+title Figura 2 - Calcular benefício (proposta S01)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam activityBackgroundColor #F1F6F3
+skinparam activityBorderColor #315B51
+|Aluno / View|
+start
+:Escolher vantagem\ne solicitar cotação;
+|Controller / BenefitService|
+:Autenticar e carregar\noferta, política e saldo;
+if (Dados e política\nválidos e ativos?) then (sim)
+  :Resolver Strategy pelo\ntipo configurado;
+else (não)
+  |Aluno / View|
+  :Exibir indisponibilidade\nou erro de configuração;
+  stop
+endif
+|Strategy selecionada|
+:Calcular benefício e custo;\nseparar centavos de moedas;
+|Controller / BenefitService|
+if (Resultado respeita\nunidades e limites?) then (sim)
+  :Montar cotação com\nversão, custo e benefício;
+else (não)
+  |Aluno / View|
+  :Recusar resultado\ne informar o problema;
+  stop
+endif
+|Aluno / View|
+:Exibir benefício e custo\nantes da confirmação;
+if (Aluno confirma?) then (sim)
+  |Controller / BenefitService|
+  :Entregar cotação ao resgate;\nrevalidar antes do débito;
+else (não)
+  |Aluno / View|
+  :Encerrar prévia\nsem movimentar moedas;
+endif
+stop
+@enduml

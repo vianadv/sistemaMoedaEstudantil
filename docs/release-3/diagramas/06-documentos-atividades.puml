@@ -1,0 +1,55 @@
+@startuml
+!pragma useVerticalIf on
+title Figura 6 - Emitir documento (proposta S01)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam activityBackgroundColor #F1F6F3
+skinparam activityBorderColor #315B51
+|MeritService|
+start
+:Receber resgate validado\ne chave da operação;
+if (Já existe resgate\npara esta chave e aluno?) then (sim)
+  :Devolver documento existente\nsem novo débito ou código;
+  stop
+else (não)
+  :Gerar código único;\nresolver Creator pela categoria;
+endif
+if (Criador registrado\npara esta categoria?) then (sim)
+else (não)
+  :Recusar categoria desconhecida\nsem movimentar moedas;
+  stop
+endif
+|Creator concreto|
+:emitir(contexto) chama\ncriarDocumento(contexto);
+:Construir produto concreto\ne validar seus campos;
+if (Dados específicos\nválidos?) then (sim)
+  :Preparar conteúdo comum\ne conteúdo da categoria;
+else (não)
+  |MeritService|
+  :Informar falha de emissão\nsem débito nem cupom parcial;
+  stop
+endif
+|Repository / banco|
+:Persistir cupom, documento,\ndébito e duas mensagens;
+if (Lote confirmou?) then (sim)
+  |MeritService|
+  :Disponibilizar documento\nna conta do aluno;
+else (não)
+  |Repository / banco|
+  :Reverter lote;\nnenhum resgate parcial;
+  |MeritService|
+  :Informar falha de persistência;
+  stop
+endif
+|EmailService|
+:Tentar entregar notificações\na aluno e empresa;
+if (Provedor aceitou?) then (sim)
+  :Registrar aceite\nsem prometer leitura;
+else (não)
+  :Registrar pendência/falha;\npermitir reenvio sem novo débito;
+endif
+stop
+@enduml

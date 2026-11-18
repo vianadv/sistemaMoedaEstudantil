@@ -1,0 +1,36 @@
+@startuml
+!pragma layout smetana
+title Figura 1 - ConfiguracaoPolitica (proposta S01)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam state {
+  BackgroundColor #F1F6F3
+  BorderColor #315B51
+  FontColor #173E35
+}
+hide empty description
+state "Rascunho" as Rascunho
+state "Ativa" as Ativa
+state "Inativa" as Inativa
+state "Substituída" as Substituida
+state "Descartada" as Descartada
+[*] --> Rascunho : / iniciar configuração
+Rascunho --> Rascunho : salvar [parâmetros inválidos]\n/ apontar erro; não publicar
+Rascunho --> Ativa : publicar [proprietária e dados válidos]\n/ fixar versão e estratégia
+Rascunho --> Descartada : desistir [proprietária]\n/ encerrar rascunho
+Ativa --> Ativa : calcular [oferta e dados válidos]\n/ devolver cotação; manter versão
+Ativa --> Inativa : desativar [proprietária]\n/ bloquear novos resgates
+Inativa --> Ativa : reativar [proprietária; sem alteração]\n/ permitir novos resgates
+Ativa --> Substituida : publicar nova versão [proprietária]\n/ manter versão antiga no histórico
+Inativa --> Substituida : publicar nova versão [proprietária]\n/ manter versão antiga no histórico
+Substituida --> [*]
+Descartada --> [*]
+note bottom of Ativa
+  O contexto usa uma Strategy.
+  Este ciclo descreve a configuração,
+  não os passos do algoritmo.
+end note
+@enduml

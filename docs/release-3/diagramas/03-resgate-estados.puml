@@ -1,0 +1,39 @@
+@startuml
+!pragma layout smetana
+title Figura 3 - Resgate (proposta S01 / State)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam state {
+  BackgroundColor #F1F6F3
+  BorderColor #315B51
+  FontColor #173E35
+}
+hide empty description
+state "Solicitado" as Solicitado
+state "Aguardando utilização" as Aguardando
+state "Confirmado" as Confirmado
+state "Cancelado" as Cancelado
+state "Expirado" as Expirado
+[*] --> Solicitado : / iniciar preparação\nsem débito
+Solicitado --> Aguardando : emitir [oferta válida; saldo suficiente]\n/ confirmar lote de débito, cupom, documento e mensagens
+Solicitado --> Cancelado : rejeitar ou desistir [antes do commit]\n/ encerrar sem débito
+Aguardando --> Confirmado : confirmar [empresa dona; agora < prazo]\n/ registrar uso único
+Aguardando --> Cancelado : cancelar [aluno dono; agora < prazo]\n/ compensar débito uma vez e invalidar cupom
+Aguardando --> Expirado : verificar prazo [agora >= prazo]\n/ bloquear uso; sem devolução automática
+Aguardando --> Aguardando : falha no e-mail [negócio já gravado]\n/ manter cupom e permitir reenvio
+Confirmado --> [*]
+Cancelado --> [*]
+Expirado --> [*]
+note bottom of Aguardando
+  State autoriza a transição.
+  O serviço persiste seus efeitos
+  com estado anterior verificado.
+end note
+note bottom of Cancelado
+  Final não significa apagar histórico.
+  Não há retorno para Solicitado.
+end note
+@enduml

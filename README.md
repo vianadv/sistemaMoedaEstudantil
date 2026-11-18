@@ -2,6 +2,8 @@
 
 Reconhecimento de professores que se transforma em vantagens no campus. Projeto acadêmico do Laboratório de Desenvolvimento de Software, PUC Minas, segundo semestre de 2026.
 
+**Release 3 - Lab05S01:** [seleção das três funcionalidades, justificativas GoF e seis diagramas UML](docs/release-3/README.md), com [PDF para entrega](docs/release-3/Lab05S01-Meritus.pdf). Esta etapa é modelagem; a implementação das novas funcionalidades está prevista no S03.
+
 **Atualização Release 2 (LABDESENV_4):** [entregas Lab04S01, Lab04S02 e Lab04S03](docs/release-2/README.md), com confirmação de envio para o professor, templates de e-mail por perfil, [diagramas de sequência individuais e geral](docs/release-2/sequencias/README.md) e testes dos fluxos. [Comparação entre modelos e código](docs/release-2/modelos.md).
 
 **Repositório:** https://github.com/vianadv/sistemaMoedaEstudantil

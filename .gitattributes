@@ -1,0 +1,2 @@
+# Preserva os bytes do PDF gerado, inclusive em checkouts Windows.
+/docs/release-3/*.pdf binary

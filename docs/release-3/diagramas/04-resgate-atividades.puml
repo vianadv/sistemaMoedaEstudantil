@@ -1,0 +1,51 @@
+@startuml
+!pragma useVerticalIf on
+title Figura 4 - Transição de resgate (proposta S01)
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam ArrowColor #315B51
+skinparam activityBackgroundColor #F1F6F3
+skinparam activityBorderColor #315B51
+|Aluno ou empresa / View|
+start
+:Solicitar cancelamento,\nconfirmação ou consulta;
+|RedemptionService / State|
+:Autenticar e verificar\no vínculo com o resgate;
+if (Ator autorizado?) then (sim)
+  :Carregar estado e tempo;\navaliar evento com State;
+else (não)
+  |Aluno ou empresa / View|
+  :Recusar acesso;\nmanter estado e saldo;
+  stop
+endif
+|RedemptionService / State|
+:Se aguardando e vencido,\nselecionar evento expirar;
+if (Evento efetivo permitido\npelo State?) then (sim)
+else (não)
+  |Aluno ou empresa / View|
+  :Informar transição inválida;\nmanter estado e saldo;
+  stop
+endif
+|RedemptionService / State|
+if (Plano exige transição?) then (sim)
+  :Preparar novo estado e efeitos;\nse cancelar, compensar uma vez;
+else (consulta sem mudança)
+  |Aluno ou empresa / View|
+  :Exibir estado atual;
+  stop
+endif
+|Repository / banco|
+:Gravar estado e efeitos\nem lote condicional;
+if (Estado anterior confere\ne lote confirmou?) then (sim)
+  |Aluno ou empresa / View|
+  :Exibir novo estado\ne resultado financeiro;
+else (não)
+  |Repository / banco|
+  :Reverter lote;
+  |Aluno ou empresa / View|
+  :Informar conflito\ne pedir atualização;
+endif
+stop
+@enduml
