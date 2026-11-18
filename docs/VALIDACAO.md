@@ -1,5 +1,16 @@
 # Validação
 
+## MailerSend - 18/11/2026
+
+- `npm test`: 36 testes aprovados, zero falhas; `npm run build`: concluído.
+- Cinco testes novos cobrem configuração completa, sigilo do health, destinatários dos cadastros nos quatro templates, reconhecimento e resgate, reenvio sem duplicar mensagens aceitas, preservação dos saldos em falha, rejeição de endereços fictícios, limites do provedor, supressão sem identificador e fila pausada.
+- A chave do projeto foi enviada por stdin ao armazenamento privado da Cloudflare. `.env.mailersend.json` foi confirmado como ignorado pelo Git; nenhuma credencial foi versionada.
+- Um teste externo pelo adaptador MailerSend foi aceito (`202` com identificador), e o painel do serviço mostrou **Delivered** para o destinatário de contato. Isso confirma aceite pelo servidor destinatário; não houve acesso à caixa de entrada nem confirmação de leitura.
+- Versão ativa após a configuração: `ea623f85-0619-4da8-b131-dcaaa0844795`, com 100% do tráfego. Página inicial HTTP 200; `/api/health`: banco ativo e `emailConfigured: true`.
+- O teste externo não movimentou moedas nem alterou cadastros do banco público. Escritas de negócio foram verificadas apenas na base local isolada.
+
+Limitação ainda presente: conta Sandbox com domínio de teste, inicialmente restrita a dois destinatários e 100 e-mails mensais. Envio para todos os usuários depende de liberação do provedor. A chave tem validade até 30/11/2027. Não houve contratação de plano, cartão ou domínio próprio.
+
 ## Integração Gmail - 11/11/2026
 
 - `node --test tests/*.test.mjs`: 31 testes aprovados, zero falhas.

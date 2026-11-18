@@ -4,6 +4,14 @@ URL pública: https://meritus-estudantil.vianadv.workers.dev
 
 Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
+## MailerSend ativado em 18/11/2026
+
+Código `02b504f`, publicado inicialmente como `9f27252d-6ba3-4a04-a9c1-a709429932d2`. Após guardar as três configurações privadas (`EMAIL_PROVIDER`, `MAILERSEND_API_KEY` e `MAILERSEND_FROM`), a versão ativa passou a `ea623f85-0619-4da8-b131-dcaaa0844795`, com 100% do tráfego. Não houve migração nem alteração de dados do D1. A chave fica fora do GitHub e não aparece nos logs de configuração.
+
+A página inicial respondeu HTTP 200 e `/api/health` confirmou `database: true` e `emailConfigured: true`. Os 36 testes passaram e o build concluiu. Um teste real, enviado pelo mesmo adaptador de transporte com a configuração do projeto, foi aceito pelo MailerSend; o painel registrou **Delivered**. Esse teste foi feito fora das transações de negócio e não criou reconhecimentos, débitos ou cupons no banco público. A caixa de entrada do destinatário não foi acessada.
+
+**Limite atual:** a conta continua em Sandbox com domínio de teste, inicialmente limitada a dois destinatários distintos e 100 e-mails mensais. A integração ativada não significa liberação para todos os cadastros. O painel orienta adicionar domínio próprio para sair do teste; qualquer ampliação depende das condições e da aprovação do provedor. A chave criada pelo proprietário tem validade até 30/11/2027. As mensagens antigas não foram disparadas automaticamente. Contas `@meritus.demo` são recusadas pelo adaptador antes de consumir os destinatários do serviço.
+
 ## Integração Gmail publicada em 11/11/2026
 
 Código `b8cb532`, versão Cloudflare `e294f290-bebf-42f7-957f-97158cd037a3`. A atualização adiciona Gmail por SMTP/TLS como alternativa ao Resend, com remetente único do sistema e destinatários originados nos cadastros. O banco foi preservado. A interface explica a situação do envio sem apresentar nomes de credenciais aos usuários.
