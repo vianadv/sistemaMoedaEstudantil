@@ -25,6 +25,11 @@ export async function sendMailerSend(message, env) {
     throw new Error('O serviço de e-mail não respondeu. Confira o painel antes de tentar novamente.');
   }
   if (response.status !== 202) {
+    if (response.status === 422) {
+      const detail = await response.text().catch(() => '');
+      if (/MS42225/.test(detail)) throw new Error('A conta de teste permite apenas dois destinatários diferentes. Use os endereços definidos para a demonstração.');
+      if (/MS42222/.test(detail)) throw new Error('A cota de e-mails da conta de teste terminou. Aguarde a renovação ou a liberação do serviço.');
+    }
     const errors = {
       401: 'A chave de envio foi recusada. Confira a autorização do serviço.',
       403: 'O serviço ainda não liberou este envio. Confira a conta e as permissões.',

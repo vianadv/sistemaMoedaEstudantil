@@ -4,6 +4,7 @@ import {emailProvider} from '../services/EmailService.mjs';
 import {seed} from '../services/seed.mjs';
 import {uid,digest,passwordHash,passwordMatches,check,text,email,cpf,integer,publicUser} from '../services/security.mjs';
 const json=(body,status=200,headers={})=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...headers}});
+const demoLogins={'professor@meritus.demo':['demo-teacher','teacher'],'aluno@meritus.demo':['demo-student','student'],'empresa@meritus.demo':['demo-partner','partner']};
 export async function api(request,env){
   try{
     const url=new URL(request.url), path=url.pathname.replace(/^\/api/,'');const repo=new Repository(env.DB),service=new MeritService(repo,env);
@@ -14,6 +15,7 @@ export async function api(request,env){
       check((Number(request.headers.get('Content-Length'))||0)<900000,'Arquivo muito grande.',413);
     }
     let b={};if(['POST','PUT','PATCH'].includes(request.method)){const raw=await request.text();check(raw.length<900000,'Arquivo muito grande.',413);try{b=JSON.parse(raw||'{}');}catch{check(false,'JSON inválido.');}}
+    check(b&&typeof b==='object'&&!Array.isArray(b),'Envie um objeto JSON válido.');
     if(path==='/institutions'&&request.method==='GET')return json(await repo.all('SELECT * FROM institutions ORDER BY name'));
     if(path==='/register'&&request.method==='POST'){
       check(['student','partner'].includes(b.role),'Perfil inválido.');const name=text(b.name,'Nome'),em=email(b.email),password=text(b.password,'Senha',8,120);const id=uid();
@@ -26,8 +28,9 @@ export async function api(request,env){
     if(path==='/login'&&request.method==='POST'){
       const loginEmail=email(b.email);
       let u=await repo.one('SELECT * FROM users WHERE email=? AND active=1',loginEmail);
-      // O atalho público da demonstração acompanha o e-mail atual do professor.
-      if(!u&&loginEmail==='professor@meritus.demo')u=await repo.one("SELECT * FROM users WHERE id='demo-teacher' AND role='teacher' AND active=1");
+      // Os atalhos públicos acompanham o cadastro sem ignorar senha ou perfil.
+      const demo=demoLogins[loginEmail];
+      if(!u&&demo)u=await repo.one('SELECT * FROM users WHERE id=? AND role=? AND active=1',...demo);
       check(u&&await passwordMatches(String(b.password??''),u.password_hash),'E-mail ou senha incorretos.',401);
       const token=uid()+uid();await repo.run('INSERT INTO sessions(token_hash,user_id,expires_at) VALUES(?,?,?)',await digest(token),u.id,Date.now()+8*60*60*1000);
       await repo.run('DELETE FROM sessions WHERE expires_at<?',Date.now());
@@ -42,9 +45,11 @@ export async function api(request,env){
     if(path==='/me'&&request.method==='GET')return json({user:publicUser(user),emailConfigured:!!emailProvider(env)});
     if(path==='/me'&&request.method==='PUT'){
       role('student','partner');const name=text(b.name,'Nome'),em=email(b.email),address=text(b.address,'Endereço',5,300);
-      if(user.role==='student'){check(await repo.one('SELECT id FROM institutions WHERE id=?',b.institution_id),'Instituição inválida.');await repo.run('UPDATE users SET name=?,email=?,address=?,cpf=?,rg=?,institution_id=?,course=? WHERE id=?',name,em,address,cpf(b.cpf),text(b.rg,'RG'),b.institution_id,text(b.course,'Curso'),user.id);}
-      else await repo.run('UPDATE users SET name=?,email=?,address=? WHERE id=?',name,em,address,user.id);
-      if(b.password)await repo.run('UPDATE users SET password_hash=? WHERE id=?',await passwordHash(text(b.password,'Senha',8,120)),user.id);
+      const updates=[];
+      if(user.role==='student'){check(await repo.one('SELECT id FROM institutions WHERE id=?',b.institution_id),'Instituição inválida.');updates.push(['UPDATE users SET name=?,email=?,address=?,cpf=?,rg=?,institution_id=?,course=? WHERE id=?',name,em,address,cpf(b.cpf),text(b.rg,'RG'),b.institution_id,text(b.course,'Curso'),user.id]);}
+      else updates.push(['UPDATE users SET name=?,email=?,address=? WHERE id=?',name,em,address,user.id]);
+      if(b.password)updates.push(['UPDATE users SET password_hash=? WHERE id=?',await passwordHash(text(b.password,'Senha',8,120)),user.id]);
+      await repo.batch(updates);
       return json({message:'Cadastro atualizado.'});
     }
     if(path==='/me'&&request.method==='DELETE'){

@@ -123,4 +123,8 @@ test('MailerSend mantém fila pausada aceita sem duplicá-la e trata limites sem
     mock.mock.mockImplementation(async () => new Response(config.MAILERSEND_API_KEY, { status }));
     await assert.rejects(sendMailerSend(rows[0], config), e => !e.message.includes(config.MAILERSEND_API_KEY));
   }
+  for (const [code, expected] of [['MS42225', /dois destinatários/], ['MS42222', /cota de e-mails/]]) {
+    mock.mock.mockImplementation(async () => new Response(JSON.stringify({ message: code, detail: config.MAILERSEND_API_KEY }), { status: 422 }));
+    await assert.rejects(sendMailerSend(rows[0], config), e => expected.test(e.message) && !e.message.includes(config.MAILERSEND_API_KEY));
+  }
 });

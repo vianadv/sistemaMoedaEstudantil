@@ -61,6 +61,6 @@ Sem configuração explícita de provedor, o sistema seleciona MailerSend quando
 
 `/api/health` informa apenas `emailConfigured`, sem expor credenciais. Antes de configurar a conta, o valor permanece `false`. Os testes SMTP e de outbox usam transporte simulado, sem enviar a pessoas reais. Depois da configuração, faça a verificação com um endereço real autorizado; os endereços `@meritus.demo` não são caixas de entrada reais.
 
-As mensagens antigas não são disparadas em lote automaticamente ao configurar o remetente. Os usuários podem tentar reenviar suas mensagens pendentes pela interface. Novas operações tentam entregar suas próprias mensagens após o commit.
+As mensagens antigas não são disparadas em lote automaticamente ao configurar o remetente. Os usuários podem tentar reenviar suas mensagens pendentes pela interface. Se o cadastro mudou de e-mail, o reenvio atualiza o destinatário para o endereço atual desse usuário antes de enviar; mensagens já aceitas não são alteradas nem reenviadas. Novas operações tentam entregar suas próprias mensagens após o commit.
 
 Referências: [SMTP do Gmail](https://developers.google.com/workspace/gmail/imap/imap-smtp), [TLS no Worker](https://developers.cloudflare.com/workers/runtime-apis/nodejs/tls/).

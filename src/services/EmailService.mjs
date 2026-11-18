@@ -15,8 +15,9 @@ export class EmailService {
   async deliver(ids){
     const provider=emailProvider(this.env);if(!provider)return;
     for(const id of ids){
-      const m=await this.repo.one('SELECT * FROM emails WHERE id=?',id); if(!m||m.status==='sent')continue;
+      const m=await this.repo.one('SELECT e.*,u.email current_recipient FROM emails e JOIN users u ON u.id=e.user_id WHERE e.id=? AND u.active=1',id); if(!m||m.status==='sent')continue;
       try{
+        if(m.recipient!==m.current_recipient){await this.repo.run('UPDATE emails SET recipient=? WHERE id=?',m.current_recipient,id);m.recipient=m.current_recipient;}
         let notice=null;
         if(provider==='gmail')await this.gmail(m,this.env);
         else if(provider==='mailersend')notice=await sendMailerSend(m,this.env);
