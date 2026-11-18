@@ -1,5 +1,16 @@
 # Validação
 
+## Revisão de demonstração - 18/11/2026
+
+- `npm test`: 44 testes aprovados, zero falhas. `npm run build` e `git diff --check`: concluídos.
+- Falhas reproduzidas e corrigidas: JSON nulo gerando 500; gravação parcial do cadastro com senha inválida; atalhos de aluno/empresa quebrados após trocar e-mail; reenvio usando endereço antigo.
+- Reenvio individual testado com isolamento de destinatário, preservação de mensagens já aceitas e recusa de mensagem pertencente a outra conta. O envio em lote permanece disponível quando solicitado explicitamente pela interface.
+- Interface: chave de reconhecimento mantida durante nova tentativa após falha de rede, mensagens de conexão claras e bloqueio de cliques repetidos no reenvio. Sintaxe verificada com `node --check src/views/app.js`.
+- Publicada a versão `119245a7-5801-400f-ba13-20b24a69ffad`. Os três perfis autenticaram, consultaram suas telas aplicáveis por API e encerraram as sessões. Não houve nova transferência, resgate ou alteração de cupom na verificação pública.
+- Após autorização, foi atualizado um cadastro de aluno. Somente a confirmação existente que havia falhado foi reenviada. D1 registrou aceite no endereço atualizado; MailerSend mostrou **Delivered** para aluno e professor. Três mensagens antigas pendentes não foram enviadas.
+
+Limite externo preservado: dois destinatários distintos no modo de teste. Os testes locais não equivalem a auditoria completa nem comprovam envio irrestrito para todos os cadastros.
+
 ## Regressão do envio no Workers - 18/11/2026
 
 - Causa reproduzida: o modo Fetch `redirect: error` funciona no Node, mas é recusado pelo Workers antes da requisição. O teste Miniflare devolveu a mesma falha observada no site antes da correção.

@@ -4,6 +4,14 @@ URL pública: https://meritus-estudantil.vianadv.workers.dev
 
 Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
+## Revisão para demonstração - 18/11/2026
+
+Código `7f734f1`, versão `119245a7-5801-400f-ba13-20b24a69ffad`. Corrigidos os reenvios após troca de e-mail, atalhos dos três perfis após alteração de cadastro, validação de JSON e gravação atômica do perfil com senha. A interface mantém a chave do reconhecimento durante uma repetição por falha de conexão, informa erros de conexão com texto simples e desabilita reenvios enquanto a tentativa está em andamento. Os erros conhecidos de cota/destinatários do serviço têm mensagens específicas.
+
+44 testes aprovados e build concluído. Os cinco testes adicionais reproduziram as falhas antes das correções e validam entrada, atomicidade, atalhos e reenvio individual restrito ao dono da mensagem. Os três perfis passaram por login, consultas aplicáveis e logout no site publicado; saúde do banco e configuração de envio continuaram ativas.
+
+Com autorização do responsável, o e-mail do aluno de demonstração foi alterado para o endereço já usado no primeiro teste do serviço, preservando senha, saldo e histórico. Apenas a confirmação que havia falhado foi reenviada pela API, sem disparar as três mensagens antigas pendentes nem repetir a transferência. O painel MailerSend confirmou **Delivered** para aluno e professor. Os endereços pessoais não foram inseridos no código ou nesta documentação pública. A conta continua limitada aos dois destinatários do Sandbox.
+
 ## Correção de envio no Worker - 18/11/2026
 
 Código `05b4d12`, versão `50c85cd5-ab58-4421-8432-c797d460927b`. A configuração anterior usava `redirect: error`, aceita pelo Node, mas não pelo runtime Workers: a chamada falhava antes de alcançar o MailerSend. O adaptador agora usa `manual` e rejeita respostas diferentes de `202`, sem encaminhar a chave a outro destino. O teste Miniflare reproduziu a falha antes do ajuste e passou depois. Os 39 testes e o build concluíram com sucesso.
