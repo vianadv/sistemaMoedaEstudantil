@@ -24,7 +24,10 @@ export async function api(request,env){
       return json({message:'Cadastro realizado. Entre com seu e-mail e senha.'},201);
     }
     if(path==='/login'&&request.method==='POST'){
-      const u=await repo.one('SELECT * FROM users WHERE email=? AND active=1',email(b.email));
+      const loginEmail=email(b.email);
+      let u=await repo.one('SELECT * FROM users WHERE email=? AND active=1',loginEmail);
+      // O atalho público da demonstração acompanha o e-mail atual do professor.
+      if(!u&&loginEmail==='professor@meritus.demo')u=await repo.one("SELECT * FROM users WHERE id='demo-teacher' AND role='teacher' AND active=1");
       check(u&&await passwordMatches(String(b.password??''),u.password_hash),'E-mail ou senha incorretos.',401);
       const token=uid()+uid();await repo.run('INSERT INTO sessions(token_hash,user_id,expires_at) VALUES(?,?,?)',await digest(token),u.id,Date.now()+8*60*60*1000);
       await repo.run('DELETE FROM sessions WHERE expires_at<?',Date.now());

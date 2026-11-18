@@ -13,6 +13,8 @@ Abra http://localhost:3000. O arquivo `data/meritus.sqlite` é criado automatica
 
 Os perfis de demonstração são `professor@meritus.demo`, `aluno@meritus.demo` e `empresa@meritus.demo`, todos com senha `Meritus@123`. Não use dados pessoais reais nessa demonstração pública.
 
+Se o responsável alterar o e-mail do professor no banco publicado, o novo endereço passa a receber suas próximas confirmações e também serve para login. O atalho `professor@meritus.demo` continua autenticando a conta de demonstração com a mesma senha, desde que esse endereço não pertença a outra conta ativa. Essa compatibilidade não altera endereços nem destinatários de mensagens antigas.
+
 ## Configuração opcional
 
 Copie `.env.example` para `.env` e ajuste os valores necessários. O arquivo com valores reais deve permanecer fora do Git.
