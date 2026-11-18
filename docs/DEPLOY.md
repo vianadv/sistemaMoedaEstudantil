@@ -4,6 +4,14 @@ URL pública: https://meritus-estudantil.vianadv.workers.dev
 
 Aplicativo: meritus-estudantil. Hospedagem: Cloudflare Workers Free. Banco: Cloudflare D1 Free, meritus-db. Configuração reproduzível: wrangler.cloudflare.jsonc. Nenhum plano pago ou domínio foi contratado.
 
+## Correção de envio no Worker - 18/11/2026
+
+Código `05b4d12`, versão `50c85cd5-ab58-4421-8432-c797d460927b`. A configuração anterior usava `redirect: error`, aceita pelo Node, mas não pelo runtime Workers: a chamada falhava antes de alcançar o MailerSend. O adaptador agora usa `manual` e rejeita respostas diferentes de `202`, sem encaminhar a chave a outro destino. O teste Miniflare reproduziu a falha antes do ajuste e passou depois. Os 39 testes e o build concluíram com sucesso.
+
+Após a publicação, a confirmação existente do professor foi reenviada pela API autenticada do próprio site, sem repetir a transferência de moedas. O D1 passou a registrar `sent`, sem erro, e o MailerSend confirmou **Delivered** no painel. A sessão de verificação foi encerrada. Banco e configuração de envio continuaram ativos.
+
+A confirmação do aluno da mesma transferência não foi reenviada; permanece com a falha anterior. Seu endereço é diferente dos dois destinatários já utilizados no modo de teste. A correção do transporte não remove esse limite de destinatários do serviço. Não houve alteração do cadastro do aluno nem contratação de plano.
+
 ## E-mail do professor atualizado em 18/11/2026
 
 Código `04f4f6c`, versão `ccb2c5bc-a23e-42fc-b6bb-e890b90cbfb7`. O e-mail de uma única conta de professor foi atualizado no D1 para o endereço confirmado pelo responsável, sem alterar senha, saldo ou histórico. O endereço pessoal não foi inserido no código nem nesta documentação pública.

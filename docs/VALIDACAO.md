@@ -1,5 +1,15 @@
 # Validação
 
+## Regressão do envio no Workers - 18/11/2026
+
+- Causa reproduzida: o modo Fetch `redirect: error` funciona no Node, mas é recusado pelo Workers antes da requisição. O teste Miniflare devolveu a mesma falha observada no site antes da correção.
+- Com `redirect: manual`, o mesmo teste passou; também confirmou a rejeição de um redirecionamento HTTP 302 sem seguir para outro domínio com a chave.
+- `npm test`: 39 testes aprovados, zero falhas. Build concluído. O simulador está declarado com versão fixa nas dependências de desenvolvimento; não usa o MailerSend real nos testes automatizados.
+- Publicada a versão `50c85cd5-ab58-4421-8432-c797d460927b`. O reenvio autenticado da confirmação existente do professor foi aceito pelo serviço; o D1 registrou `sent` e o painel MailerSend confirmou **Delivered**. A transferência original de moedas não foi repetida.
+- O envio anterior, feito pelo adaptador no Node, não demonstrava compatibilidade do transporte no Worker. Esta verificação adicional cobre a execução no site.
+
+A mensagem do aluno da mesma operação permanece pendente de reenvio, com status de falha anterior. Seu destinatário difere dos dois já utilizados no Sandbox; a limitação do serviço continua aplicável. Não foi alterado seu endereço nem acessada a caixa de entrada do professor.
+
 ## Atualização de e-mail do professor - 18/11/2026
 
 38 testes aprovados, zero falhas, e build concluído. As duas verificações adicionais cobrem o login com o endereço novo e o atalho de demonstração, recusa de senha incorreta/conta inativa, prioridade de um endereço pertencente a outra conta e destinatário atualizado das próximas confirmações.
