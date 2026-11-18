@@ -30,8 +30,8 @@ Não houve alteração de esquema: as notificações usam a tabela `emails` e se
 
 ```sh
 node server.mjs
-node --test tests/*.test.mjs
 npm ci
+npm test
 npm run build
 ```
 

@@ -16,7 +16,8 @@ export async function sendMailerSend(message, env) {
   let response;
   try {
     response = await fetch('https://api.mailersend.com/v1/email', {
-      method: 'POST', redirect: 'error', signal: AbortSignal.timeout(15000),
+      // Workers aceita manual/follow; manual mantém a chave apenas neste destino.
+      method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(15000),
       headers: { Authorization: `Bearer ${env.MAILERSEND_API_KEY.trim()}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from, to: [{ email: message.recipient }], subject: message.subject, text: message.body })
     });

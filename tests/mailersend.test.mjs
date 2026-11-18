@@ -62,7 +62,7 @@ test('MailerSend recebe confirmações e cupons nos e-mails cadastrados, sem ree
     const request = requests.find(r => r.payload.subject === row.subject && r.payload.to[0].email === row.recipient);
     assert.ok(request);
     assert.equal(request.url, 'https://api.mailersend.com/v1/email');
-    assert.equal(request.redirect, 'error');
+    assert.equal(request.redirect, 'manual');
     assert.ok(request.signal instanceof AbortSignal);
     assert.equal(request.headers.Authorization, `Bearer ${config.MAILERSEND_API_KEY}`);
     assert.deepEqual(request.payload.from, { email: 'no-reply@example.test', name: 'Meritus' });

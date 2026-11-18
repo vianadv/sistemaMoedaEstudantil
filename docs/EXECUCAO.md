@@ -49,12 +49,12 @@ npx wrangler secret put EMAIL_FROM --config wrangler.cloudflare.jsonc
 ## Testes e build
 
 ```sh
-node --test tests/*.test.mjs
 npm ci
+npm test
 npm run build
 ```
 
-Os testes usam um SQLite isolado em memória e não modificam as contas públicas. As dependências de desenvolvimento são usadas para gerar o Worker e manter o esquema. O build incorpora a interface e o backend em `dist/cloudflare/index.js`.
+Os testes usam um SQLite isolado em memória e não modificam as contas públicas. O teste MailerSend no runtime Workers usa Miniflare com provedor simulado e exige conexão de loopback local; ele não envia e-mails externos. As dependências de desenvolvimento são usadas nos testes, para gerar o Worker e manter o esquema. O build incorpora a interface e o backend em `dist/cloudflare/index.js`.
 
 ## Banco e publicação
 
