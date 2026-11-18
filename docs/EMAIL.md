@@ -2,6 +2,25 @@
 
 O Meritus envia ao endereço informado no cadastro. Alunos, professores e empresas não precisam conectar Gmail nem autorizar serviços para receber. A instalação usa um único remetente do sistema, configurado pelo responsável pelo projeto.
 
+## MailerSend, sem conectar Google
+
+O serviço fornece um domínio de teste para começar sem domínio próprio. A conta precisa ter o e-mail de contato confirmado e uma chave com permissão de envio. O modo Sandbox tem inicialmente limite de dois destinatários distintos e 100 e-mails mensais. A liberação para mais destinatários depende do provedor; não deve ser presumida pela configuração da chave. Consulte as [regras atuais do Sandbox](https://www.mailersend.com/help/sandbox-mode-and-the-professional-trial) e do [domínio de teste](https://www.mailersend.com/help/getting-started).
+
+Guarde a chave no arquivo local `.env.mailersend.json`, ignorado pelo Git:
+
+```json
+{
+  "MAILERSEND_API_KEY": "",
+  "MAILERSEND_FROM": "Meritus <no-reply@DOMINIO-DE-TESTE-DA-CONTA>"
+}
+```
+
+Após publicar o código, `npm run email:mailersend` envia esses dois valores e `EMAIL_PROVIDER=mailersend` ao armazenamento privado da Cloudflare, por stdin, sem imprimir a chave ou colocá-la nos argumentos. Não cole chaves no chat nem em arquivos versionados. Na execução local, configure essas mesmas variáveis no `.env`.
+
+A integração usa HTTPS com timeout e não segue redirecionamentos. Somente `202` acompanhado de `x-message-id` confirma aceite. Rejeições e supressões sem identificador ficam como falha. Uma fila pausada que já aceitou a mensagem fica marcada como aceita, com aviso de que aguarda liberação; não é reenviada automaticamente. Os endereços fictícios `@meritus.demo` são recusados antes de chamar esse provedor, evitando consumir os destinatários de teste.
+
+Como no SMTP, o reenvio após uma confirmação perdida pode duplicar o e-mail: esta API não oferece a chave de idempotência usada pelo Resend. `sent` significa aceite pelo serviço, e não comprovação de chegada à caixa de entrada. Referência: [API de envio MailerSend](https://developers.mailersend.com/api/v1/email).
+
 ## Gmail, sem Resend e sem domínio próprio
 
 1. No Google, crie uma [senha de app](https://myaccount.google.com/apppasswords) para o Meritus. O Google exige verificação em duas etapas para disponibilizar essa opção. Use uma conta destinada ao projeto quando possível. A senha normal do Google não deve ser usada.
@@ -36,7 +55,7 @@ O SMTP não oferece a chave de idempotência da API Resend. Se o provedor aceita
 
 Quem preferir Resend pode configurar `EMAIL_PROVIDER=resend`, `RESEND_API_KEY` e `EMAIL_FROM`. A integração anterior foi mantida. Gmail dispensa esses valores.
 
-Sem configuração explícita de provedor, o sistema seleciona Gmail quando há alguma variável Gmail; caso contrário seleciona Resend. Uma configuração incompleta não ativa o envio. Credenciais presentes não comprovam que são válidas: a entrega e o status de cada mensagem precisam ser conferidos.
+Sem configuração explícita de provedor, o sistema seleciona MailerSend quando há sua chave; senão, Gmail quando há alguma variável Gmail; caso contrário, Resend. Uma configuração incompleta não ativa o envio. Credenciais presentes não comprovam que são válidas: a entrega e o status de cada mensagem precisam ser conferidos.
 
 ## Verificação e estado atual
 

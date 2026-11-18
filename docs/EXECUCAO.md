@@ -25,13 +25,15 @@ node --env-file-if-exists=.env server.mjs
 |---|---|
 | `PORT` | Porta local, padrão 3000 |
 | `DB_PATH` | Caminho do SQLite local, padrão `./data/meritus.sqlite` |
+| `MAILERSEND_API_KEY` | Chave privada de envio da conta MailerSend do projeto |
+| `MAILERSEND_FROM` | Remetente autorizado no domínio da conta MailerSend |
 | `RESEND_API_KEY` | Credencial privada do provedor de e-mail |
 | `EMAIL_FROM` | Remetente autorizado no provedor |
 | `GMAIL_USER` | Conta remetente do sistema na opção Gmail |
 | `GMAIL_APP_PASSWORD` | Senha de app do remetente Gmail |
-| `EMAIL_PROVIDER` | Opcional: `gmail` ou `resend`; sem valor, a escolha segue as credenciais presentes |
+| `EMAIL_PROVIDER` | Opcional: `mailersend`, `gmail` ou `resend`; sem valor, a escolha segue as credenciais presentes |
 
-Para enviar e-mails externos, configure um remetente do sistema e use destinatários válidos. Gmail dispensa domínio próprio e Resend: preencha o arquivo local `.env.gmail.json` e execute `npm run email:setup` para guardar a configuração na Cloudflare. Veja [EMAIL.md](EMAIL.md) para a autorização da conta. Os endereços `@meritus.demo` são fictícios. Sem configuração, o conteúdo fica registrado na caixa de saída com status pendente; uma tentativa de envio pode ser iniciada na própria caixa de saída. Isso não comprova entrega real de e-mail.
+Para enviar e-mails externos, configure um remetente do sistema e use destinatários válidos. MailerSend usa uma chave do projeto sem conectar Google: preencha o arquivo privado `.env.mailersend.json` e execute `npm run email:mailersend` para guardá-la na Cloudflare. O domínio de teste começa limitado a dois destinatários. A alternativa Gmail usa `.env.gmail.json` e `npm run email:setup`. Veja [EMAIL.md](EMAIL.md) para os requisitos e limites de cada opção. Os endereços `@meritus.demo` são fictícios. Sem configuração, o conteúdo fica registrado na caixa de saída com status pendente; uma tentativa de envio pode ser iniciada na própria caixa de saída. Isso não comprova entrega real de e-mail.
 
 Na Release 2, cada novo reconhecimento gera duas confirmações: recebimento para o aluno e envio para o professor. Cada resgate gera um cupom para o aluno e uma mensagem de conferência para a empresa, com o mesmo código. Os quatro templates estão em `src/services/emailTemplates.mjs`. Entre nos respectivos perfis e abra **Notificações** para conferir os textos e seus status. Configuração incompleta (por exemplo, chave sem remetente) mantém o modo demonstração.
 
