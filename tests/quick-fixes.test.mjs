@@ -11,11 +11,11 @@ async function fixture(t) {
   const DB = database(), repo = new Repository(DB);
   t.after(() => DB.close());
   await seed(repo);
-  const call = async (path, method = 'GET', body, cookie) => {
+  const call = async (path, method = 'GET', body, cookie, config = {}) => {
     const response = await api(new Request('http://localhost/api' + path, {
       method, headers: cookie ? { Cookie: cookie } : {},
       body: body === undefined ? undefined : JSON.stringify(body)
-    }), { DB });
+    }), { DB, ...config });
     return { status: response.status, data: await response.json(), cookie: response.headers.get('Set-Cookie')?.split(';')[0] };
   };
   return { DB, repo, call };
@@ -78,4 +78,23 @@ test('reenvio usa cadastro atual e preserva destinatário de mensagens já aceit
   assert.equal(delivered.length, 1);
   assert.equal((await repo.one('SELECT recipient FROM emails WHERE id=?', studentMail.id)).recipient, 'atual@example.test');
   assert.equal((await repo.one("SELECT status FROM emails WHERE user_id='demo-teacher'")).status, 'pending');
+});
+
+test('reenvio individual respeita dono, evita histórico em lote e não duplica aceitos', async t => {
+  const { DB, repo, call } = await fixture(t);
+  const service = new MeritService(repo, { DB });
+  const teacher = await repo.one("SELECT * FROM users WHERE id='demo-teacher'");
+  await service.semester(teacher);
+  await service.recognize(teacher, { studentId: 'demo-student', amount: 10, reason: 'Participação', key: crypto.randomUUID() });
+  await service.recognize(teacher, { studentId: 'demo-student', amount: 10, reason: 'Colaboração', key: crypto.randomUUID() });
+  const login = await call('/login', 'POST', { email: 'aluno@meritus.demo', password: 'Meritus@123' });
+  const teacherMail = await repo.one("SELECT id FROM emails WHERE user_id='demo-teacher'");
+  const studentMail = await repo.one("SELECT id FROM emails WHERE user_id='demo-student'");
+  const provider = t.mock.method(globalThis, 'fetch', async () => new Response('{}'));
+  const config = { RESEND_API_KEY: 'fake-key', EMAIL_FROM: 'Meritus <sender@example.test>' };
+  assert.equal((await call('/emails/retry', 'POST', { id: teacherMail.id }, login.cookie, config)).status, 404);
+  assert.equal(provider.mock.callCount(), 0);
+  for (let i = 0; i < 2; i++) assert.equal((await call('/emails/retry', 'POST', { id: studentMail.id }, login.cookie, config)).status, 200);
+  assert.equal(provider.mock.callCount(), 1);
+  assert.equal((await repo.one("SELECT COUNT(*) n FROM emails WHERE status='pending'")).n, 3);
 });

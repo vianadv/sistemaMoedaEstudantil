@@ -75,7 +75,11 @@ export async function api(request,env){
       const r=await repo.run("UPDATE coupons SET status='used',used_at=CURRENT_TIMESTAMP WHERE id=? AND status='available'",c.id);check(r.meta.changes===1,'Cupom já utilizado.',409);return json({message:`Cupom confirmado: ${c.title}.`,coupon:{...c,status:'used'}});
     }
     if(path==='/emails'&&request.method==='GET')return json(await repo.all('SELECT * FROM emails WHERE user_id=? ORDER BY created_at DESC,rowid DESC LIMIT 100',user.id));
-    if(path==='/emails/retry'&&request.method==='POST'){const rows=await repo.all("SELECT id FROM emails WHERE user_id=? AND status!='sent' LIMIT 20",user.id);await service.mail.deliver(rows.map(r=>r.id));return json({message:emailProvider(env)?'Tentativa concluída. Confira o status.':'Modo demonstração: o remetente de e-mail do Meritus ainda não foi configurado.'});}
+    if(path==='/emails/retry'&&request.method==='POST'){
+      const rows=b.id?await repo.all('SELECT id FROM emails WHERE user_id=? AND id=?',user.id,text(b.id,'Mensagem',8,100)):await repo.all("SELECT id FROM emails WHERE user_id=? AND status!='sent' LIMIT 20",user.id);
+      if(b.id)check(rows.length,'Mensagem não encontrada para sua conta.',404);
+      await service.mail.deliver(rows.map(r=>r.id));return json({message:emailProvider(env)?'Tentativa concluída. Confira o status.':'Modo demonstração: o remetente de e-mail do Meritus ainda não foi configurado.'});
+    }
     return json({error:'Rota não encontrada.'},404);
   }catch(e){
     let message=e.message||'Erro inesperado.',status=e.status||500;
